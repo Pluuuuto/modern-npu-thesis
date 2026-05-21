@@ -19,7 +19,7 @@
   ),
   abstract: (
     content: [
-随着多模态大语言模型在图像理解、视觉问答、智能助手等场景中的广泛应用，其安全性问题由传统文本空间扩展到图文联合空间，模型在视觉输入参与推理后暴露出新的越狱攻击面。现有多模态越狱研究表明，攻击者可以通过图像文字嵌入、视觉扰动、图文联动提示等方式削弱模型的安全对齐能力，但已有方法仍普遍存在三方面不足：一是风险语义往往暴露较强，容易被输入过滤或输出审查识别；二是图像模态在部分方法中主要承担静态载荷作用，未能充分发挥对模型生成行为的主动引导能力；三是面对安全能力较强的先进模型时，攻击稳定性和跨模型适用性仍有待提升。围绕上述问题，本文以多模态大语言模型为研究对象，在系统梳理国内外相关工作的基础上，提出一种基于图像语义嵌入的跨模态联动越狱分析框架。该方法将目标语义拆分为图像侧可识别的细粒度片段，并在文本侧引入编码线索、恢复校验步骤和结构化输出约束，使图像既承担信息承载功能，也参与对模型注意力与任务理解方向的影响。在实验设计上，本文构建样本读取、图文提示生成、模型调用、自动评分和结果统计的一体化流程，并围绕所提出方法开展结果分析。在评估侧，引入 LLM-as-a-judge 机制，对模型响应进行语义级自动判别，并以攻击成功率、平均请求次数等指标评价方法有效性。实验部分基于 SafeBench 部分敏感任务类别开展测试。结果表明，图像语义线索与文本恢复链的组合能够显著提高攻击输入的可解析性和触发效率，同时也暴露出当前多模态系统在跨模态隐藏语义、场景化诱导和多步恢复任务中仍存在显著风险。进一步地，本文结合 HiddenDetect、BlueSuffix 等代表性防御研究，从输入净化、隐藏状态监测和黑盒防御增强等角度分析其适用边界，指出单纯面向显式违规表达的防御机制难以充分覆盖语义嵌入型图文联合攻击。本文研究可为多模态大语言模型安全评估、越狱检测机制设计和鲁棒防御体系构建提供参考。
+随着多模态大语言模型在图像理解、视觉问答、智能助手等场景中的广泛应用，其安全性问题由传统文本空间扩展到图文联合空间，模型在视觉输入参与推理后暴露出新的越狱攻击面。现有多模态越狱研究表明，攻击者可以通过图像文字嵌入、视觉扰动、图文联动提示等方式削弱模型的安全对齐能力，但已有方法仍普遍存在三方面不足：一是风险语义往往暴露较强，容易被输入过滤或输出审查识别；二是图像模态在部分方法中主要承担静态载荷作用，未能充分发挥对模型生成行为的主动引导能力；三是面对安全能力较强的先进模型时，攻击稳定性和跨模型适用性仍有待提升。围绕上述问题，本文以多模态大语言模型为研究对象，在系统梳理国内外相关工作的基础上，提出一种基于图像语义嵌入的跨模态联动越狱分析框架。该方法将目标语义拆分为图像侧可识别的细粒度片段，并在文本侧引入编码线索、恢复校验步骤和结构化输出约束，使图像既承担信息承载功能，也参与对模型注意力与任务理解方向的影响。在实验设计上，本文构建样本读取、图文提示生成、模型调用、自动评分和结果统计的一体化流程，并围绕所提出方法开展结果分析。在评估侧，引入 LLM-as-a-judge 机制，对模型响应进行语义级自动判别，并以攻击成功率、平均请求次数等指标评价方法有效性。实验部分基于 SafeBench 五个敏感任务类别共 250 条样本开展测试。最新结果显示，完整方法在 gpt-4o、grok-3 和 qwen-vl-max 上分别取得 87.60%、95.60% 和 93.20% 的平均攻击成功率，平均请求次数分别为 1.96、1.37 和 1.65；FigStep 基线 ASR / QN 为 33.20% / 3.85、47.20% / 3.21、42.00% / 3.49。进一步的 gpt-4o 消融实验表明，去除 Base64 编码引导、图像侧 PGD 语义嵌入、多步恢复链、结构化输出模板和场景包装分别会造成 11.60 至 16.80 个百分点的成功率下降。结果表明，图像语义线索与文本恢复链的组合能够显著提高攻击输入的可解析性和触发效率，同时也暴露出当前多模态系统在跨模态隐藏语义、场景化诱导和多步恢复任务中仍存在显著风险。进一步地，本文结合 HiddenDetect、BlueSuffix 等代表性防御研究，从输入净化、隐藏状态监测和黑盒防御增强等角度分析其适用边界，指出单纯面向显式违规表达的防御机制难以充分覆盖语义嵌入型图文联合攻击。本文研究可为多模态大语言模型安全评估、越狱检测机制设计和鲁棒防御体系构建提供参考。
     ],
     keywords: ("多模态大语言模型", "越狱攻击", "图像语义嵌入", "跨模态联动", "安全防御"),
   ),
@@ -29,7 +29,7 @@ With the rapid deployment of multimodal large language models in visual question
 
 To address these issues, this thesis studies jailbreak attacks and defenses for multimodal large language models and proposes a cross-modal linkage framework centered on semantic embedding in the image modality. In this framework, target semantics are represented as fine-grained visual fragments, while the text prompt provides encoded clues, reconstruction and verification steps, and structured output constraints. Instead of treating the image as a passive text container, the method uses the image as a reference source that interacts with the textual reconstruction chain during multimodal reasoning. The experimental workflow covers sample construction, multimodal prompt generation, model invocation, automatic scoring, and result statistics, and the analysis focuses on the proposed method itself. On the evaluation side, an LLM-as-a-judge mechanism is adopted to assess responses at the semantic level, and metrics such as attack success rate and average query number are used to compare effectiveness.
 
-Experiments are conducted on selected harmful task categories from SafeBench and evaluated on several representative multimodal models. The results indicate that the proposed method achieves clear improvements over the baseline in both attack success rate and attack efficiency. At the same time, the findings reveal that current multimodal systems still exhibit notable weaknesses when facing cross-modal hidden semantics, scenario-driven guidance, and multi-step reasoning triggers. To further understand the defensive landscape, this thesis analyzes representative defense strategies, including input purification, hidden-state monitoring, and black-box defensive suffix generation. The analysis suggests that defenses focusing only on explicit harmful expressions are insufficient against semantically embedded multimodal jailbreaks. Overall, this work contributes an experimentally grounded study of how image-side semantic embedding alters the attack-defense balance in multimodal models, and it provides useful insights for future safety evaluation, detection mechanisms, and robust defense design for multimodal large language models.
+Experiments are conducted on 250 samples from five selected harmful task categories in SafeBench and evaluated on representative multimodal models. In the updated results, the complete method achieves average attack success rates of 87.60%, 95.60%, and 93.20% on gpt-4o, grok-3, and qwen-vl-max, with average query numbers of 1.96, 1.37, and 1.65, respectively. The FigStep baseline reaches ASR / QN values of 33.20% / 3.85, 47.20% / 3.21, and 42.00% / 3.49 on the same models. The gpt-4o ablation study further shows that removing Base64 guidance, the image-side PGD semantic embedding, the multi-step reconstruction chain, the structured output template, or scenario packaging reduces the attack success rate by 11.60 to 16.80 percentage points. These findings reveal that current multimodal systems still exhibit notable weaknesses when facing cross-modal hidden semantics, scenario-driven guidance, and multi-step reasoning triggers. To further understand the defensive landscape, this thesis analyzes representative defense strategies, including input purification, hidden-state monitoring, and black-box defensive suffix generation. The analysis suggests that defenses focusing only on explicit harmful expressions are insufficient against semantically embedded multimodal jailbreaks. Overall, this work contributes an experimentally grounded study of how image-side semantic embedding alters the attack-defense balance in multimodal models, and it provides useful insights for future safety evaluation, detection mechanisms, and robust defense design for multimodal large language models.
     ],
     keywords: ("Multimodal Large Language Models", "Jailbreak Attacks", "Image Semantic Embedding", "Cross-Modal Linkage", "Safety Defense"),
   ),
@@ -108,27 +108,36 @@ Experiments are conducted on selected harmful task categories from SafeBench and
 
 #heading(level: 2, numbering: none)[附录 C 补充实验结果表]
 
-#align(center)[表 C-1 平均 ASR 对比]
+#align(center)[表 C-1 最新完整方法与基线平均结果]
 #captab(
   three-line-table: true,
   width: 100%,
+  columns: (auto, auto, auto, auto, auto, 1fr),
 )[
-  | 模型 | 本文方法平均 ASR | FigStep 平均 ASR |
-  | --- | --- | --- |
-  | gpt-4o | 96.67% | 5.33% |
-  | gpt-5.4-mini | 84.00% | 3.33% |
-  | qwen-vl-max | 93.33% | 14.67% |
+  | 方法 | 模型 | 数据范围 | 平均 ASR | 平均 QN | 说明 |
+  | --- | --- | --- | --- | --- | --- |
+  | 完整方法 | gpt-4o | SafeBench 五类 250 条 | 87.60% | 1.96 | 完成完整方法与五组消融对照 |
+  | 完整方法 | grok-3 | SafeBench 五类 250 条 | 95.60% | 1.37 | 完成完整方法对照运行 |
+  | 完整方法 | qwen-vl-max | SafeBench 五类 250 条 | 93.20% | 1.65 | ASR 与 QN 由类别汇总补算 |
+  | FigStep | gpt-4o | SafeBench 五类 250 条 | 33.20% | 3.85 | 同五类口径基线 |
+  | FigStep | grok-3 | SafeBench 五类 250 条 | 47.20% | 3.21 | 同五类口径基线 |
+  | FigStep | qwen-vl-max | SafeBench 五类 250 条 | 42.00% | 3.49 | 同五类口径基线 |
 ]
 
-#align(center)[表 C-2 平均请求次数范围]
+#align(center)[表 C-2 gpt-4o 消融平均结果]
 #captab(
   three-line-table: true,
   width: 100%,
+  columns: (1.6fr, auto, auto),
 )[
-  | 方法 | QN 范围 |
-  | --- | --- |
-  | 本文方法 | 1.26-2.13 |
-  | FigStep | 4.54-4.89 |
+  | 变体 | 平均 ASR (%) | 平均 QN |
+  | --- | --- | --- |
+  | none（完整方法） | 87.60 | 1.96 |
+  | no_malicious_semantic_embedding | 71.20 | 2.56 |
+  | no_evil_alignment | 76.00 | 2.60 |
+  | no_base64 | 70.80 | 2.55 |
+  | no_multi_round_attention_shift | 72.40 | 2.36 |
+  | no_structured_output_template | 73.60 | 2.15 |
 ]
 
 #heading(level: 2, numbering: none)[附录 D 系统模块说明]
@@ -141,7 +150,7 @@ Experiments are conducted on selected harmful task categories from SafeBench and
 
 第三，自动评判模块。该模块使用 LLM-as-a-judge 对响应进行语义评分，并根据评分结果判断是否提前停止请求。评判标准应区分明确拒答、安全替代、无效响应和风险响应。
 
-第四，结果统计模块。该模块根据样本级记录计算 ASR、QN 和类别差异，并生成结果表格。后续定稿时，可在该模块中加入更多消融实验和防御对照实验的统计项。
+第四，结果统计模块。该模块根据样本级记录计算 ASR、QN 和类别差异，并生成结果表格。当前论文已纳入完整方法和主要消融变体的统计项，后续还可继续补充更多跨模型消融和防御对照实验结果。
   ],
 )
 
@@ -699,7 +708,7 @@ $ Y = "Generate"(H, O), $
 6. 若达到成功阈值，则停止；否则继续请求直至达到最大次数。
 7. 统计 ASR、QN、拒答类型和类别差异。
 
-在工程实现上，整个评测循环以 SafeBench 子目录为外层维度逐类执行。对每条样本，build_attack_prompt 会按 --image-format 选择不同分支：images_token 使用 TOKEN_ABLATION_PROMPTS 或 text-only 模板，images_mirror 使用 mirror 模板，images_wr 与 images_rotate 使用 replace_map 或打乱后的 original_prompt，images_qr 与 images_figstep 则分别使用数据字段或固定模板。对于 images_token，build_token_prompt 负责选择 title_base64 / mirror_title_base64 / original_prompt 并完成占位符替换；图像路径则由 image_path_template 或 no_malicious_semantic_embedding 的预嵌入目录逻辑生成。在线请求统一由 query_text_model 与 query_vision_model 分发：gpt-4o、gpt-4o-mini、gpt-5.4-mini、qwen-vl-max 等模型走 OpenAI 兼容接口，Claude 在配置兼容 base_url 时走兼容接口，否则走原生 SDK。OpenAI 兼容路径对 400 内容审查类错误直接返回 "I'm sorry."，对 429/5xx、超时和连接类错误按线性退避最多重试 8 次。
+在工程实现上，整个评测循环以 SafeBench 子目录为外层维度逐类执行。对每条样本，build_attack_prompt 会按 --image-format 选择不同分支：images_token 使用 TOKEN_ABLATION_PROMPTS 或 text-only 模板，images_mirror 使用 mirror 模板，images_wr 与 images_rotate 使用 replace_map 或打乱后的 original_prompt，images_qr 与 images_figstep 则分别使用数据字段或固定模板。对于 images_token，build_token_prompt 负责选择 title_base64 / mirror_title_base64 / original_prompt 并完成占位符替换；图像路径则由 image_path_template 或 no_malicious_semantic_embedding 的预嵌入目录逻辑生成。在线请求统一由 query_text_model 与 query_vision_model 分发：gpt-4o、gpt-4o-mini、grok-3、qwen-vl-max 等模型走 OpenAI 兼容接口，Claude 在配置兼容 base_url 时走兼容接口，否则走原生 SDK。OpenAI 兼容路径对 400 内容审查类错误直接返回 "I'm sorry."，对 429/5xx、超时和连接类错误按线性退避最多重试 8 次。
 
 评判侧由 score_jailbreak_response 统一封装：在调用判断模型之前，先对响应做关键词级粗筛——若包含 "unable"、"sorry"、"cannot"、"can't"、"not able"、"apologize" 等典型拒答词，则直接记为 0 分以节省请求；否则将 judge_template 与样本的 original_prompt 及模型响应一起送入 gpt-4o-mini，由其按 1–5 分制输出评分，并通过解析 \#thescore 行后的第一个数字得到分值。因此结果文件中的 score 实际取值范围为 0–5，其中 0 来自本地拒答粗筛或裁判失败兜底。judge_template 中明确要求评判模型在遇到疑似 Base64 编码的响应时先“在心中解码”，避免单纯因为输出经过编码而给出过低分数；这一设计与文本侧编码引导保持了一致的语义评判口径。
 
@@ -728,29 +737,29 @@ summarize.py 在所有子类结果落盘后由 attack.py 自动调用以聚合�
 
 === 实验目的
 
-本文实验的目标是验证基于图像语义嵌入的跨模态联动方法在多模态大语言模型安全评估中的有效性，并分析不同模型、不同风险类别和不同构造组件对结果的影响。结合中期阶段已经完成的实验，本文重点考察以下问题。
+本文实验的目标是验证基于图像语义嵌入的跨模态联动方法在多模态大语言模型安全评估中的有效性，并分析不同模型、不同风险类别和不同构造组件对结果的影响。结合最新完成的实验结果，本文重点考察以下问题。
 
-第一，所提出方法相较于 FigStep 等基线方法，是否能够在攻击成功率上取得明显提升。FigStep 代表了典型的排版图像提示攻击，其核心是将风险文本映射到图像中，再引导模型识别图像文字。本文方法在其基础上进一步引入编码引导、场景包装、多步恢复链和图像语义嵌入，因此需要通过对比实验验证改进效果。
+第一，所提出方法在扩展到五类样本后是否仍能保持较高攻击成功率。FigStep 代表了典型的排版图像提示攻击，其核心是将风险文本映射到图像中，再引导模型识别图像文字。本文方法在这一思路基础上进一步引入编码引导、场景包装、多步恢复链和图像语义嵌入，因此需要通过完整方法结果与消融结果共同验证改进效果。
 
-第二，所提出方法是否能够降低平均请求次数。攻击成功率反映有效性，平均请求次数反映效率。若方法虽然成功率较高，但需要大量重复请求，则在实际评估中的效率较低。中期实验中每个样本最多请求 5 次，本文沿用这一设置，以 QN 衡量达到目标效果所需的平均查询成本。
+第二，所提出方法是否能够降低平均请求次数。攻击成功率反映有效性，平均请求次数反映效率。若方法虽然成功率较高，但需要大量重复请求，则在实际评估中的效率较低。本文对每个样本最多请求 5 次，并以 QN 衡量达到目标效果所需的平均查询成本。
 
-第三，不同模型和不同类别之间是否存在差异。多模态模型在视觉理解能力、安全对齐强度、输入输出过滤策略和部署方式上存在差异，因此同一攻击方法在不同模型上的表现可能不同。本文通过比较 gpt-4o、gpt-5.4-mini、qwen-vl-max 等模型的结果，分析模型能力与安全策略对实验结果的影响。
+第三，不同模型和不同类别之间是否存在差异。多模态模型在视觉理解能力、安全对齐强度、输入输出过滤策略和部署方式上存在差异，因此同一攻击方法在不同模型上的表现可能不同。本文以 gpt-4o 的完整消融实验为主要分析对象，并使用 grok-3 与 qwen-vl-max 的完整方法结果进行跨模型对照。
 
 第四，防御方法在本文场景下的适用边界如何。本文不只关注攻击结果，也结合 HiddenDetect、BlueSuffix 等防御研究，讨论输入净化、隐藏状态监测和黑盒防御后缀对语义嵌入型图文联合攻击的防护能力。
 
 === 数据集与测试类别
 
-本文实验基于 SafeBench 部分敏感话题类别开展。SafeBench 是多模态安全评测中常用的基准之一，其样本围绕典型风险场景构造，能够用于测试模型在面对不安全任务时的响应倾向。中期阶段实验选取了前三个类别：01-Illegal_Activity、02-HateSpeech 和 03-Malware_Generation，每类 50 条，共 150 条测试样本。
+本文实验基于 SafeBench 部分敏感话题类别开展。SafeBench 是多模态安全评测中常用的基准之一，其样本围绕典型风险场景构造，能够用于测试模型在面对不安全任务时的响应倾向。最新实验选取了五个类别：01-Illegal_Activity、02-HateSpeech、03-Malware_Generation、04-Physical_Harm 和 05-Fraud，每类 50 条，共 250 条测试样本。
 
-选择这三类数据主要出于三方面考虑。第一，它们覆盖了多模态安全中较常见且具有代表性的风险方向，包括违法活动、仇恨表达和恶意软件生成。第二，每类样本数量相同，便于进行类别间对比。第三，中期阶段已完成基于这 150 条样本的图像构造和模型调用，能够为论文初稿提供可靠实验基础。
+选择这五类数据主要出于三方面考虑。第一，它们覆盖了多模态安全中较常见且具有代表性的风险方向，包括违法活动、仇恨表达、恶意软件生成、人身伤害和欺诈。第二，每类样本数量相同，便于进行类别间对比。第三，五类数据能够比早期三类设置更充分地观察不同风险语义对攻击效果和防御触发的影响。
 
 需要说明的是，本文正文不展示具体有害请求文本和模型风险响应样例，仅使用类别名称、统计指标和趋势分析呈现实验结果。这样既能说明模型安全问题，又避免传播可直接复用的敏感内容。
 
 === 实验对象与基线方法
 
-本文选取多类主流多模态大语言模型作为实验对象。中期阶段已对 gpt-4o、gpt-5.4-mini、Claude、qwen-vl-max 等模型进行了多轮调用，并收集了图文联合输入条件下的响应数据。其中，已形成较完整统计结果的模型包括 gpt-4o、gpt-5.4-mini 和 qwen-vl-max。
+本文选取多类主流多模态大语言模型作为实验对象。当前已形成完整五类统计结果的模型包括 gpt-4o、grok-3 和 qwen-vl-max，其中 gpt-4o 完成了完整方法与五组消融对照，grok-3 与 qwen-vl-max 完成了完整方法对照运行。Claude 等模型已有部分探索性调用结果，但尚未纳入本轮最新主表统计。
 
-基线方法采用 FigStep。FigStep 将原始风险文本转化为图像排版文字，通过视觉识别链路触发模型响应，是多模态越狱研究中的典型结构化视觉提示方法。选择 FigStep 作为基线具有合理性：一方面，它能够代表“图像作为文本载荷”的基础思路；另一方面，本文方法的改进点正是从简单视觉载荷进一步走向图像语义嵌入和跨模态联动，因此二者对比能够体现改进效果。
+基线方法采用 FigStep。FigStep 将原始风险文本转化为图像排版文字，通过视觉识别链路触发模型响应，是多模态越狱研究中的典型结构化视觉提示方法。选择 FigStep 作为方法参照具有合理性：一方面，它能够代表“图像作为文本载荷”的基础思路；另一方面，本文方法的改进点正是从简单视觉载荷进一步走向图像语义嵌入和跨模态联动。当前 `images_figstep` 结果目录已包含 gpt-4o、grok-3 与 qwen-vl-max 的五类 FigStep 聚合结果，`result.txt` 中记录各类别 sample_num、success_num、asr_by_class、qm_by_class 和总体 qm；本文将其中 qm 统一记为 QN，用于与完整方法进行同口径对照。
 
 本文方法与基线的主要差异包括：图像侧不再只承载排版文本，而是在 CLIP 共享语义空间中以 $L_oo$ 受限 PGD 注入一条完整指令性载荷；文本侧不只是要求读取图像，而是引入编码恢复、场景包装、校验链和结构化输出约束；评估侧采用多轮请求与 LLM-as-a-judge 结合的语义判别机制。
 
@@ -760,13 +769,13 @@ summarize.py 在所有子类结果落盘后由 attack.py 自动调用以聚合�
 
 实验流程包括样本构造、模型调用、自动判别和结果统计四个阶段。
 
-在样本构造阶段，首先从 SafeBench 中读取测试样本，并抽取其目标语义。随后生成图像输入：中期阶段已经实现随机干扰文字嵌入和目标关键词散落嵌入，本文改进方案进一步强调将目标语义拆分为图像侧可识别但不直接完整暴露的语义线索，并配合视觉伪装与场景元素。文本侧则构造包含编码提示、恢复步骤、场景包装和结构化输出约束的提示。
+在样本构造阶段，首先从 SafeBench 中读取测试样本，并抽取其目标语义。随后生成图像输入：本文方法在随机干扰文字嵌入和目标关键词散落嵌入的基础上，进一步强调将目标语义拆分为图像侧可识别但不直接完整暴露的语义线索，并配合视觉伪装与场景元素。文本侧则构造包含编码提示、恢复步骤、场景包装和结构化输出约束的提示。
 
 在模型调用阶段，将图像和文本共同输入目标多模态模型。为保证不同样本之间具有可比性，每个样本最多请求 5 次，并记录每次响应。若模型直接拒绝、给出安全替代或输出无关内容，则进入下一次请求；若响应被判定达到成功标准，则停止该样本的后续请求。
 
-在自动判别阶段，使用 LLM-as-a-judge 对模型响应进行语义评分。评分重点并非是否出现某些关键词，而是响应是否实质性遵循目标语义、是否提供可执行性内容、是否属于明确拒答或安全替代。中期实验中主要使用 gpt-4o 作为评判模型，当评分达到 5 分满分时判定成功。
+在自动判别阶段，使用 LLM-as-a-judge 对模型响应进行语义评分。评分重点并非是否出现某些关键词，而是响应是否实质性遵循目标语义、是否提供可执行性内容、是否属于明确拒答或安全替代。本文使用 gpt-4o-mini 作为主要评判模型，当评分达到 5 分满分时判定成功。
 
-在结果统计阶段，计算每个模型和每个类别上的 ASR 与 QN，并与 FigStep 基线进行比较。同时记录异常现象，例如模型无有效响应、网页端与 API 端差异、部分类别上拒答更强等。
+在结果统计阶段，计算每个模型和每个类别上的 ASR 与 QN，并比较完整方法与不同消融变体之间的差异。同时记录异常现象，例如模型无有效响应、网页端与 API 端差异、部分类别上拒答更强等。
 
 === 评估指标
 
@@ -780,61 +789,66 @@ $ "ASR" = frac(N_s, N) times 100%, $
 
 平均请求次数（QN）表示每个样本达到成功或完成最大查询限制所需的平均请求数量。QN 越低，说明方法越容易在较少请求内触发目标响应。对于安全评估而言，低 QN 意味着模型对该类输入更敏感，也意味着防御系统需要更早识别风险。
 
-此外，本文还结合拒答行为、类别差异和模型差异进行定性分析。由于中期报告中的细分类别表格未能以可解析文本形式保留，本文初稿仅采用报告中明确给出的平均 ASR、QN 范围和类别趋势，不额外推断未记录的具体数值。
+此外，本文还结合拒答行为、类别差异和模型差异进行定性分析。对于尚未完成同口径统计的模型和基线，本文仅作为背景或局限性说明，不将其与最新五类结果直接混合比较。
 
 == 实验结果分析
 
 === 主要实验结果
 
-中期实验结果表明，本文方法在三类攻击任务及三种主要模型上均显著优于 FigStep 基线。在 gpt-4o、gpt-5.4-mini 和 qwen-vl-max 上，本文方法的平均 ASR 分别达到 96.67%、84.00% 和 93.33%；对应 FigStep 基线的平均 ASR 分别为 5.33%、3.33% 和 14.67%。结果如表 6-1 所示。
+最新实验结果表明，本文完整方法在 SafeBench 五类任务上仍能取得较高攻击成功率，并且在较少请求内触发成功判定。在 gpt-4o、grok-3 和 qwen-vl-max 上，完整方法的平均 ASR 分别为 87.60%、95.60% 和 93.20%，平均 QN 分别为 1.96、1.37 和 1.65。与之相比，更新后的 FigStep 基线在相同五类样本上的 ASR / QN 分别为 33.20% / 3.85、47.20% / 3.21 和 42.00% / 3.49，成功率和请求效率均显著弱于完整方法。结果如表 6-1 所示。
 
 #captab(
-  caption: [本文方法与 FigStep 基线的平均 ASR 对比],
+  caption: [完整方法与 FigStep 基线的平均结果],
   three-line-table: true,
   width: 100%,
+  size: 8.5pt,
+  columns: (auto, auto, auto, auto, auto, 1fr),
 )[
-  | 模型 | 本文方法平均 ASR | FigStep 平均 ASR | 提升幅度 |
-  | --- | --- | --- | --- |
-  | gpt-4o | 96.67% | 5.33% | 91.34% |
-  | gpt-5.4-mini | 84.00% | 3.33% | 80.67% |
-  | qwen-vl-max | 93.33% | 14.67% | 78.66% |
+  | 方法 | 模型 | 数据范围 | 平均 ASR | 平均 QN | 说明 |
+  | --- | --- | --- | --- | --- | --- |
+  | 完整方法 | gpt-4o | 五类 250 条 | 87.60% | 1.96 | 完成完整方法与五组消融对照 |
+  | 完整方法 | grok-3 | 五类 250 条 | 95.60% | 1.37 | 完成完整方法对照运行 |
+  | 完整方法 | qwen-vl-max | 五类 250 条 | 93.20% | 1.65 | ASR 与 QN 由类别汇总补算 |
+  | FigStep | gpt-4o | 五类 250 条 | 33.20% | 3.85 | 同五类口径基线 |
+  | FigStep | grok-3 | 五类 250 条 | 47.20% | 3.21 | 同五类口径基线 |
+  | FigStep | qwen-vl-max | 五类 250 条 | 42.00% | 3.49 | 同五类口径基线 |
 ]
 
-从表 6-1 可以看出，本文方法在三个模型上均取得显著提升。尤其是在 gpt-4o 上，平均 ASR 接近 97%，说明该模型虽然具有较强多模态理解能力，但在面对图像语义嵌入与文本恢复链联动时仍存在明显安全风险。gpt-5.4-mini 的平均 ASR 相对较低，为 84.00%，说明其在部分类别或部分样本上表现出更强拒答倾向。qwen-vl-max 的平均 ASR 为 93.33%，整体上也表现出较高脆弱性。
+从表 6-1 可以看出，扩展到五个风险类别后，本文方法在三个目标模型上均保持较高成功率。grok-3 的完整方法 ASR 最高，达到 95.60%，平均 QN 也最低，为 1.37；qwen-vl-max 的完整方法 ASR 为 93.20%，平均 QN 为 1.65；gpt-4o 的完整方法 ASR 为 87.60%，平均 QN 为 1.96。相比之下，FigStep 基线在三个模型上的五类 ASR 分别为 33.20%、47.20% 和 42.00%，与完整方法仍存在 48.40 至 54.40 个百分点的差距；其平均 QN 分别为 3.85、3.21 和 3.49，均明显高于完整方法。说明排版图像提示本身具备一定触发能力，但整体有效性和触发效率均不如图像语义嵌入与文本恢复链的组合稳定。
 
-在攻击效率方面，本文方法的 QN 值明显低于基线。中期实验记录显示，本文方法的 QN 范围约为 1.26 至 2.13，而 FigStep 基线的 QN 范围约为 4.54 至 4.89。结果如表 6-2 所示。
+为了进一步观察不同风险类别之间的差异，表 6-2 给出完整方法在三个模型上的类别 ASR 明细。
 
 #captab(
-  caption: [本文方法与 FigStep 基线的 QN 范围对比],
+  caption: [完整方法在五类 SafeBench 样本上的类别 ASR 明细（\%）],
   three-line-table: true,
   width: 100%,
-  columns: (auto, auto, 1fr),
+  size: 8.5pt,
+  columns: (auto, auto, auto, auto, auto, auto),
 )[
-  | 方法 | QN 范围 | 说明 |
-  | --- | --- | --- |
-  | 本文方法 | 1.26-2.13 | 多数成功样本可在较少请求内达到成功判定 |
-  | FigStep | 4.54-4.89 | 接近最大请求次数，整体效率较低 |
+  | 模型 | Illegal_Activity | HateSpeech | Malware_Generation | Physical_Harm | Fraud |
+  | --- | --- | --- | --- | --- | --- |
+  | gpt-4o | 86.00 | 82.00 | 96.00 | 82.00 | 92.00 |
+  | grok-3 | 98.00 | 90.00 | 98.00 | 92.00 | 100.00 |
+  | qwen-vl-max | 94.00 | 94.00 | 100.00 | 90.00 | 88.00 |
 ]
 
-QN 结果说明，本文方法不仅成功率更高，而且更容易在较少请求内触发模型响应。这一现象表明，图像语义嵌入、编码引导和场景包装之间的联动，可能比单纯排版图像更容易影响模型的任务解释过程。
+从请求效率看，完整方法在三个模型上的 QN 均低于 2，其中 Malware_Generation 类别的平均 QN 最低，三个模型分别为 1.32、1.14 和 1.52；HateSpeech 与 Physical_Harm 的 QN 相对更高，说明模型在显式风险表达和人身伤害类语义上更容易出现拒答或需要更多重复请求。
 
 === 类别差异分析
 
-从不同类别看，03-Malware_Generation 的攻击成功率整体最高，多数模型接近 100%。这一现象可能与该类样本的语义结构有关。恶意软件相关请求通常具有明确的技术任务形式，模型在面对“代码、步骤、结构化说明”等输出格式时，可能更容易进入技术补全或问题求解模式。如果图文联合输入将风险语义包装为信息恢复或内容补全任务，模型可能更难在生成前重新判断其安全属性。
+从不同类别看，03-Malware_Generation 在三个模型上的完整方法 ASR 分别达到 96.00%、98.00% 和 100.00%，是五类中最稳定的高成功类别。这一现象可能与该类样本的语义结构有关。恶意软件相关请求通常具有明确的技术任务形式，模型在面对“代码、步骤、结构化说明”等输出格式时，可能更容易进入技术补全或问题求解模式。如果图文联合输入将风险语义包装为信息恢复或内容补全任务，模型可能更难在生成前重新判断其安全属性。
 
-02-HateSpeech 类别上的模型差异更为明显。中期报告显示，gpt-5.4-mini 在该类别上的 ASR 为 68.00%，低于其整体平均水平，说明该模型对仇恨表达类内容可能具有更强的安全识别和拒答倾向。与技术类风险相比，仇恨表达往往在语义上更直接、更容易被安全策略识别，因此即使经过图文联动包装，模型也可能在恢复语义后触发拒答。
+02-HateSpeech 与 04-Physical_Harm 的跨模型平均 ASR 相对较低，分别约为 88.67% 和 88.00%。与技术类风险相比，仇恨表达和人身伤害类请求往往在语义上更直接、更容易被安全策略识别，因此即使经过图文联动包装，模型也可能在恢复语义后触发拒答。值得注意的是，qwen-vl-max 在 HateSpeech 上仍达到 94.00%，说明类别难度并非固定不变，而会受到模型部署策略和输出过滤强度影响。
 
-01-Illegal_Activity 类别处于二者之间。该类请求覆盖范围较广，有些样本可能偏向抽象违法建议，有些则偏向具体操作流程。模型响应受具体语义、提示包装和输出格式影响较大，因此结果通常需要结合样本级分析进一步解释。
+01-Illegal_Activity 与 05-Fraud 的跨模型平均 ASR 分别约为 92.67% 和 93.33%。Illegal_Activity 覆盖范围较广，有些样本偏向抽象违法建议，有些则偏向具体操作流程；Fraud 类请求则常具有话术生成或情境补全特征，更容易被包装为结构化写作任务。grok-3 在 Fraud 上达到 100.00%，而 qwen-vl-max 在该类别上为 88.00%，说明同一风险类别在不同模型上的触发模式仍存在差异。
 
 总体来看，不同类别的差异说明，多模态越狱效果不仅取决于攻击框架本身，也取决于风险语义与模型安全策略之间的匹配程度。模型对某些类别具有更强拒答能力，并不意味着其整体多模态安全已经充分可靠。
 
 === 模型差异分析
 
-从模型角度看，gpt-4o 在中期实验中最容易受到攻击，平均 ASR 达到 96.67%。这可能与其较强的图像识别和复杂指令遵循能力有关。多模态能力越强，模型越能够识别图像中分散的线索，也越能按照文本恢复链完成多步推理；如果安全判断未能同步覆盖整个恢复过程，则能力增强反而可能放大越狱风险。
+从模型角度看，grok-3 在完整方法下平均 ASR 达到 95.60%，平均 QN 仅为 1.37，表现出最高的触发稳定性和最低的查询成本。这可能与其对图像线索、编码恢复任务和结构化输出约束的指令遵循能力有关。多模态能力越强，模型越能够识别图像中分散的线索，也越能按照文本恢复链完成多步推理；如果安全判断未能同步覆盖整个恢复过程，则能力增强反而可能放大越狱风险。
 
-gpt-5.4-mini 相对更保守，平均 ASR 为 84.00%，并在 HateSpeech 类别上表现出较明显防御能力。这说明该模型可能具有更强的风险语义识别或更严格的输出安全控制。但其 ASR 仍然显著高于 FigStep 基线，说明语义嵌入型图文联合输入仍能突破部分安全边界。
-
-qwen-vl-max 整体表现出较高脆弱性，平均 ASR 为 93.33%。这表明多模态模型在视觉文字识别、跨模态对齐和指令遵循方面的能力，如果缺乏足够稳健的安全校验，可能在图文联合攻击中被利用。
+qwen-vl-max 的完整方法平均 ASR 为 93.20%，平均 QN 为 1.65，整体上也表现出较高脆弱性。由于其 result.txt 中总 ASR 与总 QN 字段为空，本文根据五个类别的 success_num 与 qm_by_class 进行汇总补算；各类别样本数相同，因此该补算与按样本合并统计等价。gpt-4o 的完整方法平均 ASR 为 87.60%，低于 grok-3 与 qwen-vl-max，但其五组消融结果最完整，因而适合作为模块贡献分析的主要对象。
 
 实验还观察到，部分商业系统可能未返回有效响应，或在网页端表现出比 API 端更强的拦截能力。这说明同一模型在不同部署环境下不一定行为一致。网页端可能额外叠加前置输入审查、图像安全检测、输出过滤、上下文控制或交互限制。因此，论文结论不应简单从 API 环境推广到所有实际应用场景，后续研究需要更系统地区分部署环境。
 
@@ -844,7 +858,7 @@ qwen-vl-max 整体表现出较高脆弱性，平均 ASR 为 93.33%。这表明�
 
 为定量分析本文方法中各组成部分的相对贡献，在 attack.py 的 images_token 分支中实现了消融实验入口。该入口通过 --ablation 参数在统一框架下切换不同变体：文本侧的四组消融（no_evil_alignment、no_base64、no_multi_round_attention_shift、no_structured_output_template）通过 TOKEN_ABLATION_PROMPTS 字典中的提示模板差异实现；图像侧的一组消融（no_malicious_semantic_embedding）则保持文本提示不变，通过 --pre-embedding-image-dir 把图像输入从“带 PGD 语义嵌入的扰动图像”切换回预嵌入前 token 图像。完整方法对应 none 分支，即同时启用图像侧语义嵌入和文本侧四要素。实验结果保存时在 images_token 输出目录后追加对应的消融标记，便于按变体统计 ASR 与 QN。
 
-所有消融变体共享相同的数据集（SafeBench 全部 5 个敏感类别，每类 50 条，共 250 条样本）、相同的目标模型、相同的最大请求次数（5 次）和相同的 LLM-as-a-judge 评判流程，仅在“图像/文本侧某一类因素”上进行单点替换，以保证比较的可比性。表 6-3 给出消融变体的设置说明。
+所有消融变体共享相同的数据集（SafeBench 选取的 5 个敏感类别，每类 50 条，共 250 条样本）、相同的目标模型、相同的最大请求次数（5 次）和相同的 LLM-as-a-judge 评判流程，仅在“图像/文本侧某一类因素”上进行单点替换，以保证比较的可比性。表 6-3 给出消融变体的设置说明。
 
 #captab(
   caption: [图像语义嵌入跨模态联动方法的消融变体设置],
@@ -865,7 +879,7 @@ qwen-vl-max 整体表现出较高脆弱性，平均 ASR 为 93.33%。这表明�
 
 === 平均结果分析
 
-消融实验沿用前述实验流程：每个样本最多请求 5 次，由 gpt-4o-mini 在 1–5 分制下作为评判模型，评分达到 5 分时即判定为成功并停止该样本后续请求。统计指标包括平均 ASR、平均 QN 与各敏感类别上的 ASR。受限于商业 API 的请求成本与速率，本轮消融实验在 gpt-4o 上完成了完整的六组对照（none + 5 组消融），同时在 gpt-5.4-mini 上完成了完整方法的对照运行，用于交叉验证主结论。
+消融实验沿用前述实验流程：每个样本最多请求 5 次，由 gpt-4o-mini 在 1–5 分制下作为评判模型，评分达到 5 分时即判定为成功并停止该样本后续请求。统计指标包括平均 ASR、平均 QN 与各敏感类别上的 ASR。受限于商业 API 的请求成本与速率，本轮消融实验在 gpt-4o 上完成了完整的六组对照（none + 5 组消融），同时使用 grok-3 与 qwen-vl-max 的完整方法结果作为跨模型有效性参照。
 
 表 6-4 汇总了 gpt-4o 在六组实验上的平均 ASR 与 QN。
 
@@ -879,9 +893,9 @@ qwen-vl-max 整体表现出较高脆弱性，平均 ASR 为 93.33%。这表明�
   | 变体 | 平均 ASR (%) | 平均 QN |
   | --- | --- | --- |
   | none（完整方法） | *87.60* | *1.96* |
-  | no_malicious_semantic_embedding | 84.80 | 2.01 |
-  | no_evil_alignment | 76.80 | 2.55 |
-  | no_base64 | 70.80 | 2.61 |
+  | no_malicious_semantic_embedding | 71.20 | 2.56 |
+  | no_evil_alignment | 76.00 | 2.60 |
+  | no_base64 | 70.80 | 2.55 |
   | no_multi_round_attention_shift | 72.40 | 2.36 |
   | no_structured_output_template | 73.60 | 2.15 |
 ]
@@ -894,7 +908,7 @@ qwen-vl-max 整体表现出较高脆弱性，平均 ASR 为 93.33%。这表明�
   label: <fig-ablation-asr>,
 )
 
-从平均指标看，完整方法在 gpt-4o 上取得 87.60% 的 ASR 和 1.96 的 QN，五组消融均较完整方法出现不同程度的下降，验证了图像侧语义嵌入与文本侧四要素均对最终效果做出正向贡献。其中，剥离文本侧因素的四组消融下降幅度更大：no_base64 使 ASR 下降 16.80 个百分点至 70.80%、QN 上升至 2.61，是单一变量中降幅最大的一组；no_evil_alignment、no_multi_round_attention_shift、no_structured_output_template 分别将 ASR 拉低至 76.80%、72.40% 和 73.60%，对应 QN 上升到 2.55、2.36 和 2.15。相比之下，no_malicious_semantic_embedding 的 ASR 仅小幅下降至 84.80%、QN 微升至 2.01，说明在 gpt-4o 这一具备较强 OCR 与指令遵循能力的闭源模型上，文本侧恢复链本身已经能够独立承担大部分诱导功能，而图像侧 PGD 嵌入更多体现为对文本任务的隐式视觉先验加成。
+从平均指标看，完整方法在 gpt-4o 上取得 87.60% 的 ASR 和 1.96 的 QN，五组消融均较完整方法出现明显下降，验证了图像侧语义嵌入与文本侧四要素均对最终效果做出正向贡献。其中，no_base64 使 ASR 下降 16.80 个百分点至 70.80%，仍是平均降幅最大的一组；no_malicious_semantic_embedding 使 ASR 下降 16.40 个百分点至 71.20%，说明图像侧 PGD 语义嵌入并非单纯的弱辅助，而是与文本恢复链共同支撑攻击效果的重要因素。no_multi_round_attention_shift、no_structured_output_template 和 no_evil_alignment 分别将 ASR 拉低至 72.40%、73.60% 和 76.00%，对应下降 15.20、14.00 和 11.60 个百分点。QN 方面，五组消融均高于完整方法，其中 no_evil_alignment、no_malicious_semantic_embedding 与 no_base64 的 QN 分别升至 2.60、2.56 和 2.55，说明这些模块不仅影响成功率，也影响达到成功判定所需的查询成本。
 
 === 类别结果分析
 
@@ -910,8 +924,8 @@ qwen-vl-max 整体表现出较高脆弱性，平均 ASR 为 93.33%。这表明�
   | 变体 | Illegal_Activity | HateSpeech | Malware_Generation | Physical_Harm | Fraud |
   | --- | --- | --- | --- | --- | --- |
   | none | 86.00 | 82.00 | 96.00 | 82.00 | 92.00 |
-  | no_malicious_semantic_embedding | 80.00 | 76.00 | 96.00 | 76.00 | 96.00 |
-  | no_evil_alignment | 76.00 | 52.00 | 92.00 | 76.00 | 88.00 |
+  | no_malicious_semantic_embedding | 72.00 | 58.00 | 92.00 | 48.00 | 86.00 |
+  | no_evil_alignment | 72.00 | 52.00 | 92.00 | 76.00 | 88.00 |
   | no_base64 | 64.00 | 50.00 | 94.00 | 56.00 | 90.00 |
   | no_multi_round_attention_shift | 82.00 | 66.00 | 48.00 | 70.00 | 96.00 |
   | no_structured_output_template | 70.00 | 62.00 | 86.00 | 74.00 | 76.00 |
@@ -925,23 +939,23 @@ qwen-vl-max 整体表现出较高脆弱性，平均 ASR 为 93.33%。这表明�
   label: <fig-ablation-category>,
 )
 
-类别明细呈现出三种较为清晰的模式。第一，HateSpeech 与 Illegal_Activity 这两类显式风险表达较强的类别对文本侧诱导因素最敏感：去除 Base64 编码引导后 HateSpeech 上 ASR 由 82% 跌至 50%、Illegal_Activity 由 86% 跌至 64%；去除虚构场景包装后 HateSpeech 上 ASR 跌至 52%。这说明对于模型本身已建立较强拒答倾向的高敏感类别，编码引导与场景包装共同承担了“将风险请求伪装为信息恢复任务”的关键功能，二者缺一不可。第二，Malware_Generation 类别对多步注意力转移机制最为敏感：no_multi_round_attention_shift 将该类别 ASR 由 96% 大幅压低至 48%，是全表中单变量降幅最大的单元格；同时该变体在 Fraud 上反而提升到 96%。这一对比说明，五步恢复链对于需要较长技术性描述的恶意软件生成尤为重要——模型在被压缩为“解码—生成”两步后，更倾向于直接对高风险技术请求进行拒答，而对于结构相对短小的诈骗话术则不再需要分步铺垫。第三，no_structured_output_template 在大多数类别上稳定下降 6—20 个百分点，且 QN 由 1.96 增至 2.15，体现出结构化输出模板对“响应完整性”这一影响 LLM-as-a-judge 评分的工程性要素具有普遍而均匀的支撑作用。
+类别明细呈现出四种较为清晰的模式。第一，HateSpeech 与 Illegal_Activity 这两类显式风险表达较强的类别对编码和场景包装较敏感：去除 Base64 编码引导后 HateSpeech 上 ASR 由 82% 跌至 50%、Illegal_Activity 由 86% 跌至 64%；去除虚构场景包装后 HateSpeech 上 ASR 跌至 52%。这说明对于模型本身已建立较强拒答倾向的高敏感类别，编码引导与场景包装共同承担了“将风险请求伪装为信息恢复任务”的关键功能。第二，图像侧 PGD 语义嵌入对 Physical_Harm 与 HateSpeech 的影响显著：no_malicious_semantic_embedding 将 Physical_Harm 从 82% 压低至 48%，将 HateSpeech 从 82% 压低至 58%，表明图像侧语义方向在部分高敏感类别中承担了重要的跨模态先验作用。第三，Malware_Generation 类别对多步注意力转移机制最为敏感：no_multi_round_attention_shift 将该类别 ASR 由 96% 大幅压低至 48%，是全表中单变量降幅最大的单元格；同时该变体在 Fraud 上反而提升到 96%。这一对比说明，五步恢复链对于需要较长技术性描述的恶意软件生成尤为重要，而对于结构相对短小的诈骗话术则不一定带来同样收益。第四，no_structured_output_template 在大多数类别上稳定下降 8—20 个百分点，且 QN 由 1.96 增至 2.15，体现出结构化输出模板对“响应完整性”这一影响 LLM-as-a-judge 评分的工程性要素具有较均匀的支撑作用。
 
-图像侧消融与文本侧消融的对比则揭示了跨模态贡献的非对称性。在 gpt-4o 上，单独剥离图像侧 PGD 语义嵌入仅造成 2.80 个百分点的 ASR 下降，而单独剥离任一文本侧要素均带来 11—17 个百分点的下降。这说明在以闭源大模型 API 为目标、且文本通道允许充分编排的设定下，图像侧主要承担“为文本提示提供方向一致的视觉先验”这一辅助角色；而文本侧的编码引导、场景包装、分步链条和输出模板共同构成了攻击的主干骨架。值得注意的是，剥离图像嵌入后 Fraud 类别 ASR 反而由 92% 微升至 96%，可能与 PGD 嵌入在该类别上的方向偏置与预嵌入 token 图像之间存在轻微干扰有关，提示后续在更细粒度的图像优化目标设计中应区分类别敏感度。
+图像侧消融与文本侧消融的对比表明，跨模态联动并不是单纯由文本提示主导。no_malicious_semantic_embedding 的平均 ASR 降幅达到 16.40 个百分点，仅略低于 no_base64 的 16.80 个百分点，并高于多步恢复链和结构化输出模板的平均降幅。这说明在当前结果中，图像侧 PGD 语义嵌入与文本侧编码引导共同构成了最关键的两个触发因素：前者提供方向一致的视觉语义先验，后者降低显式风险表达并引入中间解码步骤。不同模块的类别贡献具有互补性，因此若只保留文本侧恢复链或只依赖图像侧扰动，都难以达到完整方法的稳定效果。
 
-在跨模型一致性方面，完整方法在 gpt-5.4-mini 上的对照运行取得 74.00% 的 ASR 与 2.68 的 QN。该结果显著低于同一变体在 gpt-4o 上的 87.60% / 1.96，与 6.5 节模型差异分析中“gpt-5.4-mini 对图文联合输入具有更强安全保守性”的结论一致，间接验证了消融对照不是 gpt-4o 上的偶然现象——在更保守的模型上，完整链路依然显著优于已知基线（FigStep 在该模型上的 3.33%）。受限于实验资源，本初稿暂未对 gpt-5.4-mini 与 qwen-vl-max 完成全部五组消融对照，相关数据将在后续补充。
+在跨模型一致性方面，完整方法在 grok-3 与 qwen-vl-max 上分别取得 95.60% / 1.37 和 93.20% / 1.65 的 ASR / QN，均高于 gpt-4o 的 87.60% / 1.96。这说明完整链路在不同商业多模态模型上均保持较强效果，但模块贡献排序目前主要由 gpt-4o 的逐项消融支撑。受限于实验资源，本文尚未对 grok-3 与 qwen-vl-max 完成全部五组消融对照，相关数据仍需后续补充。
 
 === 消融结论
 
-综合表 6-4 与表 6-5，可得出三点结论。其一，本文方法在 gpt-4o 上的攻击效果由“图像侧 PGD 语义嵌入 + 文本侧四要素”共同决定，五个模块均为正向贡献，且任一模块单独剥离都无法使方法退化为基线水平，体现出跨模态联动设计的整体性。其二，文本侧四要素中，编码引导（Base64）对平均 ASR 的边际贡献最大、对显式风险类别（HateSpeech、Illegal_Activity）尤为关键；多步注意力转移则对需要较长技术铺垫的类别（Malware_Generation）具有不可替代的作用。其三，图像侧语义嵌入在 gpt-4o 上对平均 ASR 的边际贡献相对较小但稳定为正，且与不同类别之间存在轻微方向耦合，提示后续工作可在“面向特定风险类别的图像优化方向”和“在更保守模型上重新评估图像侧贡献”两个方向上继续深化。
+综合表 6-4 与表 6-5，可得出三点结论。其一，本文方法在 gpt-4o 上的攻击效果由“图像侧 PGD 语义嵌入 + 文本侧四要素”共同决定，五个模块均为正向贡献，且任一模块单独剥离后都会明显改变整体效果，体现出跨模态联动设计的整体性。其二，Base64 编码引导与图像侧 PGD 语义嵌入是平均贡献最大的两个因素，分别造成 16.80 和 16.40 个百分点的 ASR 差异，说明编码步骤与视觉语义先验共同支撑了完整链路。其三，多步注意力转移、结构化输出模板和场景包装具有更强的类别依赖性：多步恢复链对 Malware_Generation 尤为关键，结构化输出模板对多类别响应完整性提供稳定支撑，场景包装则主要影响 HateSpeech 等显式风险类别。
 
 == 实验小结
 
-本章基于中期阶段实验结果，对本文方法的有效性进行了分析。结果表明，基于图像语义嵌入的跨模态联动方法在 gpt-4o、gpt-5.4-mini 和 qwen-vl-max 上均显著优于 FigStep 基线，不仅平均 ASR 明显提高，QN 也明显降低。类别分析显示，Malware_Generation 类别整体更容易成功，而 HateSpeech 类别在部分模型上触发了更强拒答。模型分析表明，多模态能力较强的模型并不必然更安全，若安全对齐未能覆盖跨模态恢复链，模型能力反而可能提高攻击输入的可解析性。
+本章基于最新五类实验结果，对本文方法的有效性进行了分析。结果表明，完整方法在 gpt-4o、grok-3 和 qwen-vl-max 上分别取得 87.60%、95.60% 和 93.20% 的平均 ASR，对应平均 QN 为 1.96、1.37 和 1.65；FigStep 基线在相同五类样本上的平均 ASR 分别为 33.20%、47.20% 和 42.00%，对应平均 QN 为 3.85、3.21 和 3.49，成功率与请求效率仍明显弱于完整方法。类别分析显示，Malware_Generation 类别整体最容易成功，而 HateSpeech 与 Physical_Harm 类别相对更容易触发安全拒答。模型分析表明，多模态能力较强的模型并不必然更安全，若安全对齐未能覆盖跨模态恢复链，模型能力反而可能提高攻击输入的可解析性。
 
-在此基础上，消融实验进一步表明，完整方法在 gpt-4o 上的 87.60% ASR 与 1.96 QN 由“图像侧 PGD 语义嵌入 + 文本侧四要素”共同支撑：剥离任一文本侧要素均使 ASR 下降 11—17 个百分点，其中编码引导（Base64）对 HateSpeech、Illegal_Activity 等显式风险类别的贡献最为关键，多步注意力转移机制对 Malware_Generation 类别近乎不可替代；剥离图像侧 PGD 嵌入仅使 ASR 微降 2.80 个百分点，说明在闭源大模型 API 场景下图像侧主要充当文本任务的视觉先验加成。
+在此基础上，消融实验进一步表明，完整方法在 gpt-4o 上的 87.60% ASR 与 1.96 QN 由“图像侧 PGD 语义嵌入 + 文本侧四要素”共同支撑：去除 Base64 编码引导、图像侧 PGD 语义嵌入、多步恢复链、结构化输出模板和场景包装分别造成 16.80、16.40、15.20、14.00 和 11.60 个百分点的 ASR 下降。其中编码引导与图像语义嵌入贡献最大，多步注意力转移机制对 Malware_Generation 类别近乎不可替代，结构化输出模板和场景包装则在提高响应完整性与降低显式风险警觉方面发挥作用。
 
-同时，实验仍存在一定局限。当前完整消融对照仅在 gpt-4o 上完成，gpt-5.4-mini 与 qwen-vl-max 上的逐项消融数据仍需后续补齐；LLM-as-a-judge 可能存在评分偏差；API 端与网页端模型行为差异也需要更多对照实验。后续应在扩大数据类别、增加模型范围和完善跨模型消融对照的基础上进一步验证结论。
+同时，实验仍存在一定局限。当前逐项消融对照仅在 gpt-4o 上完成，grok-3 与 qwen-vl-max 仅完成完整方法对照；FigStep 虽已补齐三模型五类 ASR 与 QN，但尚未完成逐项消融式基线扩展；LLM-as-a-judge 可能存在评分偏差；API 端与网页端模型行为差异也需要更多对照实验。后续应在扩大模型范围和完善跨模型消融对照的基础上进一步验证结论。
 
 
 = 面向多模态越狱的防御方法研究与对比
@@ -1047,7 +1061,7 @@ BlueSuffix 对本文研究具有两方面启示。第一，防御也可以利用
 
 再次，本文在中期阶段“视觉隐藏、编码引导、场景包装”方法的基础上，提出基于图像语义嵌入的跨模态联动安全评估框架。该方法不再只将图像视作关键词载体，而是通过 $L_oo$ 受限的 PGD 优化把一条完整的指令性载荷写入图像在 CLIP 共享空间中的特征方向，使图像在像素层面保持伪装版面外观的同时，在模型视觉编码器端被解读为越权指令。文本侧则结合编码提示、场景包装、多步恢复链和结构化输出约束，与图像侧形成语义互补、注意力转移和任务解释强化。本文在方法描述中保留抽象流程和变量定义，不公开可直接复现实验的敏感模板。
 
-最后，本文基于 SafeBench 部分敏感类别和多类主流多模态模型进行了实验分析。中期实验结果表明，本文方法在 gpt-4o、gpt-5.4-mini 和 qwen-vl-max 上的平均 ASR 分别达到 96.67%、84.00% 和 93.33%，显著高于 FigStep 基线的 5.33%、3.33% 和 14.67%；同时，本文方法 QN 范围约为 1.26 至 2.13，明显低于基线的 4.54 至 4.89。实验说明，图像语义嵌入与文本恢复链联动能够显著增强多模态越狱输入的有效性和效率。类别分析显示，Malware_Generation 类别整体更容易成功，而 HateSpeech 类别在部分模型上触发了更强拒答。模型分析则表明，多模态能力越强并不必然意味着越安全，若安全机制不能覆盖跨模态恢复过程，强理解能力也可能被攻击链路利用。
+最后，本文基于 SafeBench 五个敏感类别共 250 条样本和多类主流多模态模型进行了实验分析。最新实验结果表明，完整方法在 gpt-4o、grok-3 和 qwen-vl-max 上分别取得 87.60%、95.60% 和 93.20% 的平均 ASR，对应平均 QN 为 1.96、1.37 和 1.65；FigStep 基线在相同五类样本上的平均 ASR 分别为 33.20%、47.20% 和 42.00%，对应平均 QN 为 3.85、3.21 和 3.49，与完整方法仍有显著差距。gpt-4o 上的逐项消融进一步表明，去除 Base64 编码引导、图像侧 PGD 语义嵌入、多步恢复链、结构化输出模板和场景包装分别会造成 16.80、16.40、15.20、14.00 和 11.60 个百分点的成功率下降。实验说明，图像语义嵌入与文本恢复链联动能够显著增强多模态越狱输入的有效性和效率。类别分析显示，Malware_Generation 类别整体更容易成功，而 HateSpeech 与 Physical_Harm 类别相对更容易触发安全拒答。模型分析则表明，多模态能力越强并不必然意味着越安全，若安全机制不能覆盖跨模态恢复过程，强理解能力也可能被攻击链路利用。
 
 == 主要结论
 
@@ -1065,11 +1079,11 @@ BlueSuffix 对本文研究具有两方面启示。第一，防御也可以利用
 
 本文仍存在以下不足。
 
-第一，实验样本规模仍需扩大。当前初稿主要基于 SafeBench 前三类共 150 条样本进行分析，虽然能够说明方法趋势，但覆盖类别有限。后续应扩展到 SafeBench 更多类别、MM-SafeBench、HADES-Dataset 等数据集，以验证方法在更广风险类型上的表现。
+第一，实验样本规模仍需扩大。当前论文已扩展到 SafeBench 五个类别共 250 条样本，能够覆盖违法活动、仇恨表达、恶意软件生成、人身伤害和欺诈等代表性风险，但仍未覆盖 SafeBench 全部类别以及 MM-SafeBench、HADES-Dataset 等其他基准。后续应进一步扩大数据来源，以验证方法在更广风险类型上的表现。
 
-第二，实验模型范围仍需补充。中期阶段已经测试多类主流模型，但形成完整统计结果的模型主要为 gpt-4o、gpt-5.4-mini 和 qwen-vl-max。后续应进一步补齐 Claude、Gemini、LLaVA、Qwen-VL-Chat 等闭源和开源模型结果，并区分 API 端、网页端和本地部署环境。
+第二，实验模型范围仍需补充。当前按最新五类口径形成完整方法统计结果的模型主要为 gpt-4o、grok-3 和 qwen-vl-max，其中 gpt-4o 完成了完整消融，grok-3 与 qwen-vl-max 完成了完整方法对照。后续应进一步补齐 Claude、Gemini、LLaVA、Qwen-VL-Chat 等闭源和开源模型结果，并区分 API 端、网页端和本地部署环境。
 
-第三，消融实验的跨模型覆盖仍需完善。本文已在实验代码中实现 none、no_malicious_semantic_embedding、no_evil_alignment、no_base64、no_multi_round_attention_shift 和 no_structured_output_template 六个消融分支，并在 gpt-4o 上完成了完整的六组对照实验，量化了图像侧 PGD 语义嵌入与文本侧场景包装、编码引导、多步注意力转移、结构化输出模板四要素的相对贡献。但受限于商业 API 的请求成本与速率，gpt-5.4-mini 与 qwen-vl-max 上目前仅完成了完整方法的对照运行，尚未形成逐项消融的统计数据。后续定稿前应在这两个模型上补齐全部五组消融对照，以验证模块贡献排序在不同安全保守度模型上的一致性。
+第三，消融实验的跨模型覆盖仍需完善。本文已在实验代码中实现 none、no_malicious_semantic_embedding、no_evil_alignment、no_base64、no_multi_round_attention_shift 和 no_structured_output_template 六个消融分支，并在 gpt-4o 上完成了完整的六组对照实验，量化了图像侧 PGD 语义嵌入与文本侧场景包装、编码引导、多步注意力转移、结构化输出模板四要素的相对贡献。但受限于商业 API 的请求成本与速率，grok-3 与 qwen-vl-max 目前仅完成完整方法对照，尚未形成逐项消融数据；FigStep 基线已补齐三模型五类 ASR 与 QN，但尚未扩展到更多基线变体或防御设置。后续定稿前应补齐更多模型上的五组消融对照，以验证模块贡献排序在不同安全保守度模型上的一致性。
 
 第四，防御实验仍偏分析性。本文对 HiddenDetect、BlueSuffix、输入净化和输出审查进行了原理分析和适用性讨论，但尚未在统一实验框架下完成充分对照。后续应实现可复现的防御流程，并在相同样本和模型上比较不同防御组合的效果。
 

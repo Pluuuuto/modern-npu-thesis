@@ -184,7 +184,7 @@
         _down,
         _node(width: 100%, fill: _C_LIGHT_G, stroke-color: _C_GREEN,
           [目标模型 $M(I_s, T) -> Y$\
-           gpt-4o · gpt-5.4-mini · qwen-vl-max]),
+           gpt-4o · grok-3 · qwen-vl-max]),
         _down,
         _node(width: 100%, [LLM-as-a-judge 评分 1–5\
           5 分提前停止；最多 5 轮]),
@@ -449,10 +449,10 @@
   // 按下降幅度从大到小排序
   let entries = (
     ([`no_base64`（编码引导）], 70.80),
+    ([`no_malicious_semantic_embedding`（图像侧嵌入）], 71.20),
     ([`no_multi_round_attention_shift`（多步恢复链）], 72.40),
     ([`no_structured_output_template`（输出约束）], 73.60),
-    ([`no_evil_alignment`（场景包装）], 76.80),
-    ([`no_malicious_semantic_embedding`（图像侧嵌入）], 84.80),
+    ([`no_evil_alignment`（场景包装）], 76.00),
     ([`none`（完整方法，基线）], 87.60),
   )
   let max-drop = 16.80  // = baseline - 70.80
@@ -526,10 +526,10 @@
   // 各变体在 5 类上的 ASR
   let rows = (
     ([`no_base64`], (64.00, 50.00, 94.00, 56.00, 90.00)),
+    ([`no_malicious_semantic_embedding`], (72.00, 58.00, 92.00, 48.00, 86.00)),
     ([`no_multi_round_attention_shift`], (82.00, 66.00, 48.00, 70.00, 96.00)),
     ([`no_structured_output_template`], (70.00, 62.00, 86.00, 74.00, 76.00)),
-    ([`no_evil_alignment`], (76.00, 52.00, 92.00, 76.00, 88.00)),
-    ([`no_malicious_semantic_embedding`], (80.00, 76.00, 96.00, 76.00, 96.00)),
+    ([`no_evil_alignment`], (72.00, 52.00, 92.00, 76.00, 88.00)),
   )
   let cats = ("Illegal_Act.", "HateSpeech", "Malware_Gen.", "Physical_Harm", "Fraud")
 
