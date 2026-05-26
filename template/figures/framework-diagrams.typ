@@ -423,7 +423,7 @@
 // 图 6-1：消融实验平均 ASR 正向对比图（gpt-4o）
 // ------------------------------------------------------------
 // 直接画各变体的平均 ASR，完整方法置于首行作为参考：
-//   - 条形长度表示 65%–90% 局部区间内的 ASR，而不是 Δ
+//   - 条形长度表示 60%–90% 局部区间内的 ASR，而不是 Δ
 //   - 按 ASR 从高到低排列，视觉上展示剥离模块后的下降
 //   - 右侧辅助标注相对完整方法的下降百分点
 #let _C_BAR_FULL = rgb("#2f5b9c")
@@ -433,9 +433,10 @@
 #let _asr-row(label, asr, baseline, axis-min, axis-max) = {
   let drop = baseline - asr
   // 灰底总长代表 axis-min 到 axis-max 的局部 ASR 区间，避免 0-100% 轴压缩差异。
+  // 所有行（含完整方法）均按同一横轴线性映射，保证图形与刻度一致。
   let w = if asr <= axis-min { 0% }
-    else if asr >= axis-max { 80% }
-    else { (asr - axis-min) / (axis-max - axis-min) * 80% }
+    else if asr >= axis-max { 100% }
+    else { (asr - axis-min) / (axis-max - axis-min) * 100% }
   let color = if drop <= 0 { _C_BAR_FULL }
     else if drop < 12 { rgb("#7aa3d0") }
     else if drop < 15 { rgb("#d08a4a") }
@@ -451,10 +452,10 @@
     align: (right + horizon, left + horizon),
     text(size: 8.5pt, label),
     stack(
-      dir: ltr,
+      dir: ttb,
       spacing: 6pt,
       block(
-        width: 80%,
+        width: 100%,
         height: 14pt,
         fill: _C_BAR_BG,
         radius: 2pt,
@@ -472,16 +473,22 @@
 #let fig-ablation-asr() = block(width: 100%, breakable: false, {
   set text(size: 8.5pt)
   let baseline = 87.60
-  let axis-min = 65.00
+  let axis-min = 60.00
   let axis-max = 90.00
   // 按 ASR 从高到低排序，完整方法作为第一行参考。
   let entries = (
-    ([none（完整方法，基线）], 87.60),
-    ([no\_evil\_alignment（恶意语义对齐）], 76.00),
-    ([no\_structured\_output\_template（输出约束）], 73.60),
-    ([no\_multi\_round\_attention\_shift（多步恢复链）], 72.40),
-    ([no\_malicious\_semantic\_embedding（图像侧嵌入）], 71.20),
-    ([no\_base64（编码引导）], 70.80),
+    ([none\
+      （完整方法，基线）], 87.60),
+    ([no\_evil\_alignment\
+      （恶意语义对齐）], 76.00),
+    ([no\_structured\_output\_template\
+      （输出约束）], 73.60),
+    ([no\_multi\_round\_attention\_shift\
+      （多步恢复链）], 72.40),
+    ([no\_malicious\_semantic\_embedding\
+      （图像侧嵌入）], 71.20),
+    ([no\_base64\
+      （编码引导）], 70.80),
   )
 
   stack(
@@ -504,15 +511,13 @@
         dir: ltr,
         spacing: 6pt,
         block(
-          width: 80%,
+          width: 100%,
           grid(
-            columns: (1fr, 1fr, 1fr, 1fr, 1fr, 1fr),
-            align: (left, center, center, center, center, right),
-            text(size: 7pt, fill: _C_GRAY)[65],
+            columns: (1fr, 1fr, 1fr, 1fr),
+            align: (left, center, center, right),
+            text(size: 7pt, fill: _C_GRAY)[60],
             text(size: 7pt, fill: _C_GRAY)[70],
-            text(size: 7pt, fill: _C_GRAY)[75],
             text(size: 7pt, fill: _C_GRAY)[80],
-            text(size: 7pt, fill: _C_GRAY)[85],
             text(size: 7pt, fill: _C_GRAY)[90],
           ),
         ),
@@ -522,7 +527,7 @@
 
     v(4pt),
     align(center, text(size: 7.5pt, style: "italic",
-      [灰底总长代表 65%–90% 的局部 ASR 区间；条形越短表示剥离对应模块后成功率越低])),
+      [灰底总长代表 60%–90% 的局部 ASR 区间；条形越短表示剥离对应模块后成功率越低])),
     align(center, stack(
       dir: ltr,
       spacing: 10pt,
