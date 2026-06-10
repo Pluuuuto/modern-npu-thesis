@@ -27,6 +27,178 @@
 #let _both = text(size: 12pt, fill: _C_GRAY, sym.arrow.l.r)
 
 // ------------------------------------------------------------
+// 图 2-x：视觉表示与 Transformer 编码过程
+// ------------------------------------------------------------
+#let _cat-patch(path, size: 8pt) = block(
+  width: size,
+  height: size,
+  fill: white,
+  stroke: _C_GRAY + 0.35pt,
+  radius: 1.5pt,
+  inset: 0.5pt,
+  align(center + horizon, image(path, width: size - 1pt)),
+)
+
+#let _patch-cell(size: 8pt) = block(
+  width: size,
+  height: size,
+  fill: rgb("#f7f8fb"),
+  stroke: _C_GRAY + 0.35pt,
+  radius: 1.5pt,
+  inset: 0.5pt,
+)
+
+#let _patch-overlay-cell(size: 8pt) = block(
+  width: size,
+  height: size,
+  fill: none,
+  stroke: _C_GRAY + 0.35pt,
+  radius: 0pt,
+  inset: 0pt,
+)
+
+#let _patch-image-cell(path, size: 7.4pt) = block(
+  width: size,
+  height: size,
+  inset: 0pt,
+  stroke: _C_GRAY + 0.35pt,
+  radius: 0pt,
+)[
+  #image(path, width: 100%, height: 100%)
+]
+
+#let _patch-grid() = grid(
+  columns: (7.4pt, 7.4pt, 7.4pt, 7.4pt),
+  rows: (7.4pt, 7.4pt, 7.4pt, 7.4pt),
+  column-gutter: 0.8pt,
+  row-gutter: 0.8pt,
+  _patch-image-cell("cat_grid_patch_01.png"), _patch-image-cell("cat_grid_patch_02.png"), _patch-image-cell("cat_grid_patch_03.png"), _patch-image-cell("cat_grid_patch_04.png"),
+  _patch-image-cell("cat_grid_patch_05.png"), _patch-image-cell("cat_grid_patch_06.png"), _patch-image-cell("cat_grid_patch_07.png"), _patch-image-cell("cat_grid_patch_08.png"),
+  _patch-image-cell("cat_grid_patch_09.png"), _patch-image-cell("cat_grid_patch_10.png"), _patch-image-cell("cat_grid_patch_11.png"), _patch-image-cell("cat_grid_patch_12.png"),
+  _patch-image-cell("cat_grid_patch_13.png"), _patch-image-cell("cat_grid_patch_14.png"), _patch-image-cell("cat_grid_patch_15.png"), _patch-image-cell("cat_grid_patch_16.png"),
+)
+
+#let _image-sketch() = block(
+  width: 32pt,
+  height: 32pt,
+  fill: white,
+  stroke: _C_GRAY + 0.45pt,
+  radius: 2pt,
+  inset: 1pt,
+  align(center + horizon, image("cat.png", width: 30pt, height: 30pt)),
+)
+
+#let _token-strip() = grid(
+  columns: (8pt, 8pt, 8pt, 8pt, 8pt),
+  column-gutter: 2pt,
+  _cat-patch("cat_grid_patch_02.png"),
+  _cat-patch("cat_grid_patch_06.png"),
+  _cat-patch("cat_grid_patch_07.png"),
+  _cat-patch("cat_grid_patch_10.png"),
+  _cat-patch("cat_grid_patch_11.png"),
+)
+
+#let _attended-token-strip() = grid(
+  columns: (8pt, 8pt, 8pt, 8pt, 8pt),
+  column-gutter: 2pt,
+  _cat-patch("cat_grid_patch_06.png"),
+  _cat-patch("cat_grid_patch_02.png"),
+  _cat-patch("cat_grid_patch_10.png"),
+  _cat-patch("cat_grid_patch_07.png"),
+  _cat-patch("cat_grid_patch_11.png"),
+)
+
+#let _attention-sketch() = stack(
+  dir: ttb,
+  spacing: 2pt,
+  align(center, _token-strip()),
+  text(size: 5.4pt, fill: _C_GRAY)[patch 信息交换],
+  align(center, _attended-token-strip()),
+)
+
+#let _text-token-strip() = grid(
+  columns: (10pt, 10pt, 10pt, 10pt),
+  column-gutter: 2pt,
+  block(width: 10pt, height: 8pt, fill: rgb("#f8f8f8"), stroke: _C_GRAY + 0.35pt, radius: 2pt),
+  block(width: 10pt, height: 8pt, fill: rgb("#f8f8f8"), stroke: _C_GRAY + 0.35pt, radius: 2pt),
+  block(width: 10pt, height: 8pt, fill: rgb("#f8f8f8"), stroke: _C_GRAY + 0.35pt, radius: 2pt),
+  block(width: 10pt, height: 8pt, fill: rgb("#f8f8f8"), stroke: _C_GRAY + 0.35pt, radius: 2pt),
+)
+
+#let _vt-desc(body, size: 5.2pt) = align(center)[
+  #set par(leading: 0.15em)
+  #text(size: size, body)
+]
+
+#let _vt-node(body, fill: _C_LIGHT, stroke-color: _C_BLUE) = block(
+  width: 100%,
+  height: 64pt,
+  fill: fill,
+  stroke: stroke-color + 0.7pt,
+  radius: 4pt,
+  inset: (x: 3pt, y: 2.5pt),
+  breakable: false,
+  align(center + horizon, text(size: 6.6pt, body)),
+)
+
+#let fig-visual-transformer-encoding() = block(width: 100%, breakable: false, {
+  set text(size: 6.6pt)
+  let arrow = align(center + horizon, text(size: 9pt, fill: _C_GRAY, sym.arrow.r))
+  align(center, grid(
+    columns: (0.86fr, 10pt, 0.96fr, 10pt, 1.25fr, 10pt, 0.95fr, 10pt, 1.18fr),
+    column-gutter: 1pt,
+    align: (center + horizon,) * 9,
+    _vt-node(fill: rgb("#fff7dc"), stroke-color: _C_ORANGE, [
+      #stack(
+        dir: ttb,
+        spacing: 2pt,
+        text(weight: "bold")[输入图像],
+        align(center, _image-sketch()),
+      )
+    ]),
+    arrow,
+    _vt-node(fill: _C_LIGHT_O, stroke-color: _C_ORANGE, [
+      #stack(
+        dir: ttb,
+        spacing: 2pt,
+        text(weight: "bold")[Patch 划分],
+        align(center, _patch-grid()),
+        _vt-desc(size: 5.1pt)[整张图按 4×4 patch 切开，块间留白显示分割边界],
+      )
+    ]),
+    arrow,
+    _vt-node(fill: _C_LIGHT_G, stroke-color: _C_GREEN, [
+      #stack(
+        dir: ttb,
+        spacing: 2pt,
+        text(weight: "bold")[Patch token],
+        align(center, _token-strip()),
+        _vt-desc(size: 5.1pt)[每个真实切片变成一个 patch token，保留局部图像线索],
+      )
+    ]),
+    arrow,
+    _vt-node(fill: rgb("#f3eefb"), stroke-color: _C_BLUE, [
+      #stack(
+        dir: ttb,
+        spacing: 2pt,
+        text(weight: "bold")[自注意力交互],
+        align(center, _attention-sketch()),
+        _vt-desc(size: 5pt)[让眼睛、鼻子、轮廓等切片互相补充，拼出整体形状],
+      )
+    ]),
+    arrow,
+    _vt-node(fill: rgb("#eef3fb"), stroke-color: _C_BLUE, [
+      #stack(
+        dir: ttb,
+        spacing: 2pt,
+        text(weight: "bold")[视觉表示],
+        _vt-desc(size: 5.1pt)[形成“猫”的整体语义],
+      )
+    ]),
+  ))
+})
+
+// ------------------------------------------------------------
 // 图 2-x：多模态大语言模型典型结构
 // ------------------------------------------------------------
 #let fig-mllm-architecture() = block(width: 100%, breakable: false, {
@@ -83,6 +255,90 @@
 })
 
 // ------------------------------------------------------------
+// 图 2-x：图文对齐与共享语义空间
+#let fig-image-text-alignment() = block(width: 100%, breakable: false, {
+  set text(size: 6.4pt)
+
+  let point(label, fill, stroke-color) = stack(
+    dir: ttb,
+    spacing: 1pt,
+    align(center, circle(radius: 3.8pt, fill: fill, stroke: stroke-color + 0.65pt)),
+    text(size: 5.2pt, label),
+  )
+
+  let chip(body, stroke-color: _C_GRAY) = block(
+    width: 100%,
+    height: 15pt,
+    fill: white,
+    stroke: stroke-color + 0.45pt,
+    radius: 8pt,
+    inset: (x: 5pt, y: 2pt),
+    align(center + horizon, text(size: 5.3pt, body)),
+  )
+
+  let empty = block(width: 34pt, height: 20pt)
+
+  align(center, stack(
+    dir: ttb,
+    spacing: 7pt,
+
+    block(
+      width: 92%,
+      fill: rgb("#f6f8ff"),
+      stroke: _C_BLUE + 0.75pt,
+      radius: 10pt,
+      inset: 7pt,
+      breakable: false,
+
+      stack(
+        dir: ttb,
+        spacing: 5pt,
+
+        align(center, text(size: 7pt, weight: "bold")[共享语义空间]),
+
+        block(
+          width: 100%,
+          fill: white,
+          stroke: _C_GRAY + 0.35pt,
+          radius: 7pt,
+          inset: 6pt,
+          grid(
+            columns: (1fr, 1fr, 1fr, 1fr, 1fr),
+            rows: (26pt, 26pt, 26pt, 26pt),
+            align: (center + horizon,) * 5,
+            row-gutter: 2pt,
+            column-gutter: 3pt,
+
+            empty, empty, empty, point([飞机], rgb("#eaf7ed"), _C_GREEN), empty,
+
+            empty, point([猫图], rgb("#fff7dc"), _C_ORANGE), point([小猫], rgb("#eaf7ed"), _C_GREEN), empty, point([汽车], rgb("#eaf7ed"), _C_GREEN),
+
+            empty, empty, empty, point([狗图], rgb("#fff7dc"), _C_ORANGE), point([小狗], rgb("#eaf7ed"), _C_GREEN),
+
+            text(size: 5pt, fill: _C_ORANGE)[图像表示],
+            text(size: 5pt, fill: _C_GREEN)[文本表示],
+            empty,
+            text(size: 5pt, fill: _C_GRAY)[距离近],
+            text(size: 5pt, fill: _C_GRAY)[语义相似],
+          ),
+        ),
+
+        align(center, text(size: 5.4pt)[对比学习：拉近正确图文对，推远错误图文对]),
+      ),
+    ),
+
+    block(
+      width: 78%,
+      align(center, grid(
+        columns: (1fr, 1fr, 1fr),
+        column-gutter: 7pt,
+        chip([图文检索], stroke-color: _C_BLUE),
+        chip([零样本分类], stroke-color: _C_ORANGE),
+        chip([图像描述], stroke-color: _C_GREEN),
+      )),
+    ),
+  ))
+})
 // 图 2-x：多模态模型理解图像语义的机制
 // ------------------------------------------------------------
 #let fig-image-semantic-understanding() = block(width: 100%, breakable: false, {
@@ -196,7 +452,7 @@
           text(weight: "bold")[在线阶段 · 跨模态攻击与评测]),
         _down,
         _node(width: 100%, [构造文本提示 $T=(C, E, R, O)$\
-          场景 $C$ + Base64 编码 $E$ + 恢复链 $R$ + 输出约束 $O$]),
+          场景 $C$ + 编码引导 $E$ + 多轮推理与注意力转移 $R$ + 结构化输出模板 $O$]),
         _down,
         _node(width: 100%, [按 image\_path\_template(...).format(id)\
           加载 $I_s$ 与样本对齐]),
@@ -303,11 +559,11 @@
          title\_base64\
          Base64 标题线索]),
       _node(width: 100%, fill: _C_LIGHT_G, stroke-color: _C_GREEN,
-        [#text(weight: "bold")[$R$ · 多步恢复链]\
+        [#text(weight: "bold")[$R$ · 多轮推理与注意力转移机制]\
          5 步祈使句\
          解码优先级声明]),
       _node(width: 100%, fill: white, stroke-color: _C_GRAY,
-        [#text(weight: "bold")[$O$ · 结构化输出]\
+        [#text(weight: "bold")[$O$ · 结构化输出模板诱导]\
          "First / Second / Third"\
          分段 + 句数约束]),
     ),
@@ -406,9 +662,9 @@
       _node(width: 100%, [no\_base64\
         → 剥离 $E$（编码引导）]),
       _node(width: 100%, [no\_multi\_round\_attention\_shift\
-        → 剥离 $R$（多步恢复链）]),
+        → 剥离 $R$（多轮推理与注意力转移机制）]),
       _node(width: 100%, [no\_structured\_output\_template\
-        → 剥离 $O$（输出约束）]),
+        → 剥离 $O$（结构化输出模板诱导）]),
       _node(width: 100%, fill: _C_LIGHT_G, stroke-color: _C_GREEN,
         [no\_malicious\_semantic\_embedding\
          → 剥离图像侧 PGD 嵌入]),
@@ -482,9 +738,9 @@
     ([no\_evil\_alignment\
       （恶意语义对齐）], 76.00),
     ([no\_structured\_output\_template\
-      （输出约束）], 73.60),
+      （结构化输出模板诱导）], 73.60),
     ([no\_multi\_round\_attention\_shift\
-      （多步恢复链）], 72.40),
+      （多轮推理与注意力转移机制）], 72.40),
     ([no\_malicious\_semantic\_embedding\
       （图像侧嵌入）], 71.20),
     ([no\_base64\

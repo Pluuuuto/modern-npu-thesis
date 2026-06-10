@@ -53,9 +53,9 @@
   show math.equation.where(block: true): i-figured.show-equation.with(
     numbering: (..nums) => context {
       if graduate {
-        numbering("(" + numbering-format.get() + ")", ..nums)
+        text(font: 字体.宋体混排)[#numbering("(" + numbering-format.get() + ")", ..nums)]
       } else {
-        [（#numbering(numbering-format.get(), ..nums)）]
+        text(font: 字体.宋体混排)[(#numbering(numbering-format.get(), ..nums))]
       }
     },
   )
@@ -93,6 +93,8 @@
   // 图片独有配置
   show: capfig-style.with(
     supplement: if english-writing { "Figure" } else { "图" },
+    number-title-spacing: 0.5em,
+    number-title-spacing-en: 0.5em,
     show-subcaption: true,
     label-style: "（a）",
     subcaption-number-title-spacing: 0pt,
