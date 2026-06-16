@@ -1,8 +1,9 @@
 #import "/template.typ": (
-  Assign, IfElseChain, Return, While, algorithm, blind-review, capfig, capsubfig, captab, equation-note, multicite, nwpu-thesis, zh,
+  Assign, IfElseChain, Return, While, algorithm, capfig, capsubfig, captab, equation-note, multicite, nwpu-thesis, zh,
 )
 
 #show: nwpu-thesis.with(
+  ref-par-indent: "first-line", // 参考文献段落格式："none" | "first-line" | "hanging"
   graduate: true,
   degree: "master", // "master" | "doctor"，研究生学位级别
   track: "professional", // "academic" | "professional"，培养类型
@@ -20,19 +21,20 @@
     major: "计算机科学与技术",
     supervisor: ("张三", "教授"),
     supervisor-en: "San Zhang",
-    submit-date: (year: 2026, month: 3),
-    reviewers: (
-      (name: "xxx", title: "教授", unit: "西北工业大学"),
-      blind-review,
-    ),
+    submit-date: (2026, 3),
+    // 默认为全盲审模式，如果需要指定评阅人名单，可以在 info 中添加 reviewers 字段，如下所示：
+    // reviewers: (
+    //   ("xxx", "教授", "西北工业大学"),
+    //   ("yyy", "教授", "西北工业大学"),
+    // ),
     defence-committee: (
-      date: (year: 2026, month: 3, day: 9),
-      chairman: (name: "赵某某", title: "教授", unit: "西北工业大学"),
+      date: (2026, 3, 9),
+      chairman: ("赵某某", "教授", "西北工业大学"),
       members: (
-        (name: "周某某", title: "教授", unit: "西北工业大学"),
-        (name: "吴某某", title: "副教授", unit: "西北工业大学"),
+        ("周某某", "教授", "西北工业大学"),
+        ("吴某某", "副教授", "西北工业大学"),
       ),
-      secretary: (name: "郑某某", title: "讲师", unit: "西北工业大学"),
+      secretary: ("郑某某", "讲师", "西北工业大学"),
     ),
   ),
   abstract: (
@@ -75,7 +77,7 @@
 可以使用 `capfig()` 来创建图，支持图标题、标签等功能。如@test 所示。
 
 #capfig(
-  image("figures/example.jpg", width: 20%),
+  image("figures/QQ交流群.png", width: 25%),
   caption: [图片测试],
   label: <test>,
 )
@@ -86,8 +88,8 @@
 
 #capsubfig(
   (
-    (content: image("figures/example.jpg", width: 40%), subcaption: [第一个子图说明], label: <fig-sub1>),
-    (content: image("figures/example.jpg", width: 40%), subcaption: [第二个子图说明], label: <fig-sub2>),
+    (content: image("figures/QQ交流群.png", width: 45%), subcaption: [第一个子图说明], label: <fig-sub1>),
+    (content: image("figures/QQ交流群.png", width: 45%), subcaption: [第二个子图说明], label: <fig-sub2>),
   ),
   columns: 2,
   caption: [总图标题],
@@ -96,10 +98,10 @@
 
 #capsubfig(
   (
-    (content: image("figures/example.jpg", width: 30%), subcaption: [第一个子图说明], label: <fig-sub3>),
-    (content: image("figures/example.jpg", width: 30%), subcaption: [第二个子图说明], label: <fig-sub4>),
-    (content: image("figures/example.jpg", width: 30%), subcaption: [第三个子图说明], label: <fig-sub5>),
-    (content: image("figures/example.jpg", width: 30%), subcaption: [第四个子图说明], label: <fig-sub6>),
+    (content: image("figures/QQ交流群.png", width: 38%), subcaption: [第一个子图说明], label: <fig-sub3>),
+    (content: image("figures/QQ交流群.png", width: 38%), subcaption: [第二个子图说明], label: <fig-sub4>),
+    (content: image("figures/QQ交流群.png", width: 38%), subcaption: [第三个子图说明], label: <fig-sub5>),
+    (content: image("figures/QQ交流群.png", width: 38%), subcaption: [第四个子图说明], label: <fig-sub6>),
   ),
   columns: 2,
   caption: [总图标题],
@@ -207,3 +209,9 @@ $ E = m c^2 $ <energy-mass>
   "DUBAR2013--",
   "FOURNEY",
 )。
+
+== 二级标题
+=== 三级标题
+==== 四级标题
+===== 五级标题
+目前模板支持五级标题，不支持六级标题

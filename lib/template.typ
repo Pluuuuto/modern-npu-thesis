@@ -5,14 +5,14 @@
 #import "layouts/doc.typ": doc
 #import "layouts/floats.typ": algorithm, equation-note
 #import "layouts/mainmatter.typ": frontmatter, mainmatter
-#import "pages/appendix.typ": appendix as appendix-layout
+#import "pages/appendix.typ": appendix-page
 #import "pages/bachelor-cover.typ": bachelor-cover
 #import "pages/graduate-cover.typ": master-cover
 #import "pages/abstract.typ": abstract-page
 #import "pages/outline.typ": outline-page
 #import "pages/backmatter-page.typ": backmatter-page
 #import "pages/references.typ": bilingual-bibliography
-#import "utils.typ": blind-review, distribute, page-title
+#import "utils.typ": distribute, page-title
 
 #let default-bibliography(graduate) = {
   if not graduate {
@@ -29,6 +29,7 @@
   anonymous: false,
   english-writing: false,
   colored-cover: false,
+  print-mode: false,
   info: (:),
   abstract: (:),
   abstract-en: (:),
@@ -37,6 +38,7 @@
   appendix: none,
   scan-declaration: none,
   design-summary: none,
+  ref-par-indent: "none",
   body,
 ) = {
   let bibliography = default-bibliography(graduate)
@@ -60,6 +62,11 @@
     )
   }
 
+  // 本科生封面后的空页（封底），在 mainmatter 之前渲染，无页眉页脚
+  if not graduate and print-mode {
+    pagebreak()
+  }
+
   show: init-gb7714.with(
     read(bibliography),
     style: "numeric",
@@ -68,6 +75,7 @@
     zh-colon: if not graduate { "： " },
     zh-comma: if not graduate { "，" },
     en-family-titlecase: not graduate,
+    range-sep: if not graduate { "~" } else { "-" },
   )
 
   // 3. mainmatter 包裹所有后续内容（前置 + 正文 + 后置）
@@ -75,6 +83,7 @@
     graduate: graduate,
     degree: degree,
     english-writing: english-writing,
+    print-mode: print-mode,
   )
 
   // 4. 前置部分（摘要、目录）
@@ -104,13 +113,13 @@
         title: if graduate { outline-title } else { [*#outline-title*] },
         indent: if not graduate { (0em, 1.8em, 1.3em) } else { (0em, 1.8em, 1.7em) },
         weight: if not graduate { ("bold", "regular", "regular") } else { (auto,) },
-        fill: if not graduate { ([#repeat[#text(zh(5))[…]]],) } else { (repeat([.]),) },
+        fill: if not graduate { ([#repeat(gap: -2pt)[#text(zh(6.5))[·]]],) } else { (repeat([.]),) },
         vspace: if not graduate { (1.25em, 1em) } else { (none,) },
         gap: if not graduate { (-0.5em, 0.5em) } else { (auto,) },
       )
     }
 
-    #if graduate {
+    #if graduate or print-mode {
       pagebreak(weak: true, to: "odd")
     }
   ]
@@ -125,9 +134,17 @@
   bilingual-bibliography(
     graduate: graduate,
     english-writing: english-writing,
+    par-indent: ref-par-indent,
   )
 
-  if acknowledgement != none {
+  if graduate and appendix != none {
+    appendix-page(
+      graduate: graduate,
+      english-writing: english-writing,
+    )[#appendix]
+  }
+
+  if not anonymous and acknowledgement != none {
     backmatter-page(
       "acknowledgement",
       graduate: graduate,
@@ -138,7 +155,6 @@
   if graduate and academic-achievements != none {
     backmatter-page(
       "academic-achievements",
-      graduate: true,
       english-writing: english-writing,
     )[#academic-achievements]
   }
@@ -150,15 +166,11 @@
     )[#design-summary]
   }
 
-  if appendix != none {
-    show: appendix-layout.with(
+  if not graduate and appendix != none {
+    appendix-page(
       graduate: graduate,
       english-writing: english-writing,
-    )
-    [
-      #heading(level: 1)[]
-      #appendix
-    ]
+    )[#appendix]
   }
 
   if graduate {

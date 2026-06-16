@@ -290,7 +290,7 @@
 // ============================================================================
 
 // 将 [1, 2, 3, 5, 7, 8, 9] 压缩为 "1-3, 5, 7-9"
-#let format-citation-numbers(nums) = {
+#let format-citation-numbers(nums, sep: "-") = {
   if nums.len() == 0 { return "" }
   if nums.len() == 1 { return str(nums.first()) }
 
@@ -310,10 +310,9 @@
   }
   ranges.push((start, end))
 
-  // GB/T 7714: 两篇及以上连续文献用 "-" 压缩
   ranges
     .map(((s, e)) => {
-      if s == e { str(s) } else { str(s) + "-" + str(e) }
+      if s == e { str(s) } else { str(s) + sep + str(e) }
     })
     .join(",")
 }

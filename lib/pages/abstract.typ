@@ -20,7 +20,10 @@
   let funding = abstract.at("funding", default: none)
   let content = abstract.at("content", default: [])
 
-  heading(level: 1, outlined: outlined, display-title)
+  {
+    show heading: set text(font: 字体.黑体混排)
+    heading(level: 1, outlined: outlined, display-title)
+  }
 
   content
 

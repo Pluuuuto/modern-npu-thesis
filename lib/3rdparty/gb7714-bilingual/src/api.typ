@@ -5,9 +5,10 @@
 #import "@preview/auto-pinyin:0.1.0": to-pinyin
 
 #import "core/state.typ": (
-  _bib-data, _cite-marker, _cn-first, _collect-citations,
+  _bib-data, _brace-protected, _cite-marker, _cn-first, _collect-citations,
   _compute-year-suffixes, _config, _pinyin-override, _style, _version,
 )
+#import "bib-parser.typ": parse-bib-brace-protection
 #import "core/language.typ": detect-language
 #import "core/utils.typ": format-citation-numbers
 #import "versions/mod.typ": get-citation-config, get-version-config
@@ -39,12 +40,16 @@
   zh-colon: none,
   zh-comma: none,
   en-family-titlecase: false,
+  range-sep: "-",
   doc,
 ) = {
   // 加载 bib 数据
   // sentence-case-titles: false 避免 citegeist 将英文标题转为 sentence case
   // （否则如 "Neural Networks for Text Classification" 会变为 "Neural networks for text classification"）
   let bib-data = load-bibliography(bib-content, sentence-case-titles: false)
+
+  // 解析花括号保护信息
+  _brace-protected.update(parse-bib-brace-protection(bib-content))
 
   // 设置状态
   _bib-data.update(bib-data)
@@ -58,6 +63,7 @@
     zh-colon: zh-colon,
     zh-comma: zh-comma,
     en-family-titlecase: en-family-titlecase,
+    range-sep: range-sep,
   ))
   _cn-first.update(cn-first)
   _pinyin-override.update(pinyin-override)
@@ -661,6 +667,7 @@
     if current-style == "numeric" {
       // 顺序编码制：保持原始顺序，连续的无 supplement 引用压缩
       // 格式：[1：250, 2-4]（整体在一个方括号内，用逗号分隔）
+      let range-sep = _config.get().at("range-sep", default: "-")
       let parts = ()
       let pending-orders = () // 待压缩的编号
 
@@ -669,7 +676,7 @@
         if item.supplement != none {
           // 有 supplement：先输出之前积累的无 supplement 编号，再输出当前
           if pending-orders.len() > 0 {
-            let formatted = format-citation-numbers(pending-orders)
+            let formatted = format-citation-numbers(pending-orders, sep: range-sep)
             parts.push(formatted)
             pending-orders = ()
           }
@@ -683,7 +690,7 @@
 
       // 处理剩余的无 supplement 编号
       if pending-orders.len() > 0 {
-        let formatted = format-citation-numbers(pending-orders)
+        let formatted = format-citation-numbers(pending-orders, sep: range-sep)
         parts.push(formatted)
       }
 

@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - ".github/workflows/test.yml"
-      - ".github/typst-packages.typ"
       - "template/**"
       - "lib/**"
       - "fonts/**"
@@ -13,7 +12,6 @@ on:
   pull_request:
     paths:
       - ".github/workflows/test.yml"
-      - ".github/typst-packages.typ"
       - "template/**"
       - "lib/**"
       - "fonts/**"
@@ -23,10 +21,6 @@ on:
 
 permissions:
   contents: read
-
-env:
-  PACKAGE_NAME: modern-npu-thesis
-  PACKAGE_VERSION: 0.1.0
 
 jobs:
   render:
@@ -47,37 +41,27 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          submodules: true
 
       - name: Setup Typst
-        uses: typst-community/setup-typst@v4
+        uses: typst-community/setup-typst@v5
         with:
           typst-version: 0.14.0
-          cache-dependency-path: .github/typst-packages.typ
 
       - name: Create output directory
         run: New-Item -ItemType Directory -Force -Path dist | Out-Null
 
       - name: Compile repository example
-        run: typst compile --root . --font-path fonts template/graduate.typ dist/thesis.pdf
-
-      - name: Install package locally for template smoke test
         run: |
-          $packageRoot = Join-Path (Get-Location) ".typst/packages"
-          $packageDir = Join-Path $packageRoot "preview/$env:PACKAGE_NAME/$env:PACKAGE_VERSION"
-          New-Item -ItemType Directory -Force -Path $packageDir | Out-Null
-
-          Get-ChildItem -Force | Where-Object {
-            $_.Name -notin @(".git", ".github", ".typst", ".vscode", "dist")
-          } | Copy-Item -Destination $packageDir -Recurse -Force
-
-      - name: Compile package template entrypoint
-        run: typst compile --root . --package-cache-path .typst/packages --font-path fonts template/graduate.typ dist/thesis-template.pdf
+          typst compile --root . --font-path fonts template/graduate.typ dist/graduate.pdf
+          typst compile --root . --font-path fonts template/bachelor.typ dist/bachelor.pdf
 
       - name: Upload PDF artifact
         if: matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: thesis-pdf
           path: |
-            dist/thesis.pdf
-            dist/thesis-template.pdf
+            dist/graduate.pdf
+            dist/bachelor.pdf

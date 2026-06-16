@@ -10,13 +10,15 @@
 )
 
 #show: nwpu-thesis.with(
+  ref-par-indent: "none", // 参考文献段落格式："none" | "first-line" | "hanging"
   anonymous: false, // 是否开启盲审模式
+  print-mode: true, // 是否开启印刷模式
   info: (
     title: ("面向多模态大模型的图文联合越狱攻击方法"),
     author: "陈唯聪",
     major: "信息安全",
-    supervisor: ("邰瑜", "教师"),
-    submit-date: (year: 2026, month: 6),
+    supervisor: ("邰瑜"),
+    submit-date: (2026, 6),
   ),
   abstract: (
     content: [

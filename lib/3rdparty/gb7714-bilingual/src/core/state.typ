@@ -13,7 +13,11 @@
   show-url: true, // 是否显示 URL
   show-doi: true, // 是否显示 DOI
   show-accessed: true, // 是否显示访问日期
+  range-sep: "-", // 连续文献编号的分隔符
 ))
+
+// 花括号保护的 family name 集合（entry-key -> array of protected family names）
+#let _brace-protected = state("gb7714-brace-protected", (:))
 
 // 著者-出版年制：中文文献排在外文文献之前（仅影响参考文献列表排序）
 #let _cn-first = state("gb7714-cn-first", true)

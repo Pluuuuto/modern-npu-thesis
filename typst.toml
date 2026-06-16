@@ -10,7 +10,7 @@ description = "西北工业大学学位论文模板。Modern Northwestern Polyte
 repository = "https://github.com/1195343015/modern-npu-thesis"
 keywords = ["Northwestern Polytechnical University", "NPU", "thesis"]
 categories = ["thesis"]
-exclude = [".github", ".typst", ".vscode", "dist", "fonts", "thesis.typ"]
+exclude = [".github", ".typst", ".vscode", "fonts"]
 compiler = "0.14.0"
 
 [template]

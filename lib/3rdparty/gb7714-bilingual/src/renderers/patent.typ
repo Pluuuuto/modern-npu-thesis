@@ -1,13 +1,13 @@
-// GB/T 7714 双语参考文献系统 - 报告渲染器
+// GB/T 7714 双语参考文献系统 - 专利渲染器
 
 #import "../authors.typ": format-authors
 #import "../types.typ": render-type-id
 #import "../versions/mod.typ": get-punctuation
-#import "../core/utils.typ": append-pages, build-pub-info, render-base
+#import "../core/utils.typ": render-base
 
-/// 报告渲染
-/// 格式：作者. 题名：报告编号[R]. 出版地：出版者，出版年：页码.
-#let render-report(
+/// 专利渲染
+/// 格式：专利申请者或所有者. 专利题名：专利号[P]. 公告日期：页码[引用日期].
+#let render-patent(
   entry,
   lang,
   year-suffix: "",
@@ -17,19 +17,18 @@
 ) = {
   let f = entry.fields
 
-  let authors = format-authors(entry.parsed_names, lang, version: version)
+  let authors = format-authors(entry.parsed_names, lang, version: version, entry-key: entry.entry_key)
   let title = f.at("title", default: "")
-  let number = f.at("number", default: "")
+  let patent-number = f.at("number", default: f.at("call-number", default: ""))
   let year = str(f.at("year", default: "")) + year-suffix
-  let publisher = f.at("publisher", default: f.at("institution", default: ""))
-  let address = f.at("address", default: f.at("location", default: ""))
+  let date = f.at("date", default: f.at("issued", default: year))
   let pages = f.at("pages", default: "").replace("--", "-")
   let url = f.at("url", default: "")
   let mark = f.at("_resolved_mark", default: none)
   let medium = f.at("_resolved_medium", default: none)
 
   let type-id = render-type-id(
-    "report",
+    "patent",
     has-url: url != "",
     version: version,
     mark: mark,
@@ -37,13 +36,14 @@
   )
   let punct = get-punctuation(version, lang)
 
-  // 题名：报告编号[R]
+  // 题名：专利号[P]
   let title-part = title
-  if number != "" {
-    title-part += punct.colon + number
+  if patent-number != "" {
+    title-part += punct.colon + patent-number
   }
   title-part += type-id
 
+  // 使用基础渲染器
   render-base(
     entry,
     authors,
@@ -54,18 +54,15 @@
     year-in-pub => {
       let parts = ()
       parts.push(title-part)
-
-      // 出版信息 + 页码
-      let pub-info = build-pub-info(
-        address,
-        publisher,
-        year,
-        punct,
-        include-year: year-in-pub,
-      )
-      pub-info = append-pages(pub-info, pages, punct)
-      if pub-info != "" {
-        parts.push(pub-info)
+      // 公告日期：页码
+      if year-in-pub and date != "" {
+        let date-part = str(date)
+        if pages != "" {
+          date-part += punct.colon + pages
+        }
+        parts.push(date-part)
+      } else if pages != "" {
+        parts.push(pages)
       }
       parts
     },

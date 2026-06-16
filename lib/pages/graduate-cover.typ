@@ -1,6 +1,5 @@
 #import "../utils.typ": (
-  字体, char-space, datetime-display, datetime-display-en, distribute, info-row, major-en-map, mask-value,
-  title-en-map,
+  blind-review, char-space, datetime-display, datetime-display-en, distribute, info-row, major-en-map, mask-value, 字体,
 )
 #import "../deps.typ": zh
 
@@ -19,8 +18,6 @@
     "author-en",
     "supervisor",
     "supervisor-en",
-    "chairman",
-    "reviewer",
   )
 
   let anonymous-text(key, body) = {
@@ -28,6 +25,10 @@
   }
 
   let major-label = if track == "professional" { "专业领域" } else { "学科专业" }
+
+  if "reviewers" not in info {
+    info.reviewers = (blind-review, blind-review)
+  }
 
   // 外封
   let outer-cover() = {
@@ -47,7 +48,7 @@
 
     v(231pt)
 
-    text(zh(2), font: 字体.黑体混排, weight: "bold")[
+    text(zh(2), font: 字体.黑体, weight: "bold")[
       #table(
         columns: (2.34cm, 12.13cm),
         rows: (1.45cm, 1.45cm),
@@ -81,7 +82,7 @@
         ..info-row(char-space(major-label), info.major),
         ..info-row([#char-space("指导教师")], anonymous-text(
           "supervisor",
-          info.supervisor.intersperse(" ").sum(),
+          info.supervisor.intersperse("  ").sum(),
         )),
         ..info-row([#char-space("培养单位")], info.department),
         ..info-row([#char-space("申请日期")], datetime-display(info.submit-date)),
@@ -141,7 +142,6 @@
   // 英文标题页
   let english-title-page() = {
     let major-en = major-en-map.at(info.major)
-    let supervisor-title-en = title-en-map.at(info.supervisor.at(1, default: "教授"), default: "Professor")
     let degree-title = if degree == "doctor" { "Doctor of " } else { "Master of " }
 
     v(95pt)
@@ -152,6 +152,16 @@
       #text(info.title-en)
       #v(65pt)
     ]
+
+    // 中文学术职称到英文的映射
+    let title-en-map = (
+      "教授": "Professor",
+      "副教授": "Associate Professor",
+      "研究员": "Researcher",
+      "讲师": "Lecturer",
+    )
+    // 获取导师英文职称，默认为 Professor
+    let supervisor-title-en = title-en-map.at(info.supervisor.at(1, default: "教授"), default: "Professor")
 
     text(zh(3.5))[
       #text(weight: "bold")[By]
@@ -195,19 +205,19 @@
       columns: (3.71cm, 2.83cm, 8.73cm),
       inset: (x: 4pt, y: 8pt),
       [*姓名*], [*职称*], [*工作单位*],
-      ..info.reviewers.map(r => ([#anonymous-text("reviewer", r.name)], [#r.title], [#r.unit])).flatten(),
+      ..info.reviewers.map(r => ([#r.at(0)], [#r.at(1)], [#r.at(2)])).flatten(),
     )
     v(79pt)
 
-    let defence-date-display = datetime-display(info.defence-committee.date)
+    let defence-date-display = mask-value(datetime-display(info.defence-committee.date), anonymous: anonymous)
     let defence-committee = info.defence-committee
     let defence-members = {
       let entries = ()
-      entries.push((role: "主席", ..defence-committee.chairman))
+      entries.push(("主席",) + defence-committee.chairman)
       for m in defence-committee.members {
-        entries.push((role: "委员", ..m))
+        entries.push(("委员",) + m)
       }
-      entries.push((role: "秘书", ..defence-committee.secretary))
+      entries.push(("秘书",) + defence-committee.secretary)
       entries
     }
 
@@ -219,7 +229,7 @@
       inset: (x: 4pt, y: 8pt),
       [*答辩日期*], table.cell(colspan: 3, [#defence-date-display]),
       [*答辩委员会*], [*姓名*], [*职称*], [*工作单位*],
-      ..defence-members.map(m => ([*#m.role*], [#anonymous-text("reviewer", m.name)], [#m.title], [#m.unit])).flatten(),
+      ..defence-members.map(m => ([*#m.at(0)*], [#mask-value(m.at(1), anonymous: anonymous)], [#mask-value(m.at(2), anonymous: anonymous)], [#mask-value(m.at(3), anonymous: anonymous)])).flatten(),
     )
   }
 

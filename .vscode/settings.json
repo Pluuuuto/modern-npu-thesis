@@ -4,5 +4,11 @@
     ".typst/packages",
     "--font-path",
     "fonts"
+  ],
+  "json.schemas": [
+    {
+      "fileMatch": ["/.github/renovate.json"],
+      "url": "https://docs.renovatebot.com/renovate-schema.json"
+    }
   ]
 }

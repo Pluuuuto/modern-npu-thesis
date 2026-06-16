@@ -4,26 +4,33 @@
 // 统一编号格式状态：正文 "1-1"，附录 "A-1"
 #let numbering-format = state("nwpu-numbering-format", "1-1")
 
+// 英文写作模式状态，由 setup-floats 在正文开始时写入
+#let english-writing-state = state("nwpu-english-writing", false)
+
 #let with-numbering-format(format, it) = {
   numbering-format.update(format)
   show: cap-style.with(numbering-format: format)
   it
 }
 
-#let algorithm(english-writing: false, title: none, ..body) = {
+#let algorithm(title: none, ..body) = {
   algorithm-figure(
     title,
-    supplement: if english-writing { [Algorithm] } else { [算法] },
+    supplement: context {
+      let en = english-writing-state.get()
+      if en { [Algorithm] } else { [算法] }
+    },
     inset: 0.43em,
     ..body,
   )
 }
 
-#let equation-note(english-writing: false, body) = {
+#let equation-note(body) = context {
+  let en = english-writing-state.get()
   block(width: 100%)[
     #set par(first-line-indent: 0pt, justify: false)
     #set text(zh(5))
-    #if english-writing {
+    #if en {
       [where ]
     } else {
       [式中，]
@@ -37,6 +44,10 @@
   english-writing: false,
   body,
 ) = {
+  english-writing-state.update(english-writing)
+
+  let line-height = 23pt
+
   // 算法样式
   show figure.where(kind: "algorithm"): set text(zh(5))
   show: style-algorithm.with(
@@ -52,6 +63,7 @@
   set math.equation(supplement: if english-writing { [Equation] } else { [式] })
   show math.equation.where(block: true): i-figured.show-equation.with(
     numbering: (..nums) => context {
+      set text(font: 字体.宋体混排)
       if graduate {
         text(font: 字体.宋体混排)[#numbering("(" + numbering-format.get() + ")", ..nums)]
       } else {
@@ -81,8 +93,8 @@
     middle-rule: 1pt,
     caption-text: if graduate { (font: 字体.宋体混排) } else { (font: 字体.黑体) },
     caption-below: if graduate { auto } else { 10pt },
-    table-below: if graduate { 11pt } else { 20pt },
-    caption-above: if graduate { auto } else { 20pt },
+    table-below: if graduate { 11pt } else { line-height },
+    caption-above: if graduate { auto } else { line-height },
     breakable: false,
     continued-caption: true,
     width: if graduate { 100% } else { auto },
@@ -96,11 +108,11 @@
     number-title-spacing: 0.5em,
     number-title-spacing-en: 0.5em,
     show-subcaption: true,
-    label-style: "（a）",
-    subcaption-number-title-spacing: 0pt,
+    label-style: if english-writing { "(a)" } else { "（a）" },
+    subcaption-number-title-spacing: if english-writing { 2pt } else { 0pt },
     caption-above: 0pt,
-    figure-below: if graduate { auto } else { 20pt },
-    figure-above: if graduate { auto } else { 20pt },
+    figure-below: if graduate { auto } else { line-height },
+    figure-above: if graduate { auto } else { line-height },
     subref-style: "full",
   )
 

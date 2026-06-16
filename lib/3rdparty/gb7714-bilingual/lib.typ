@@ -49,6 +49,7 @@
   zh-colon: none,
   zh-comma: none,
   en-family-titlecase: false,
+  range-sep: "-",
   doc,
 ) = {
   // 调用内部实现
@@ -65,6 +66,7 @@
     zh-colon: zh-colon,
     zh-comma: zh-comma,
     en-family-titlecase: en-family-titlecase,
+    range-sep: range-sep,
     doc,
   )
 }
